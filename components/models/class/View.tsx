@@ -2,9 +2,7 @@
 import { allModels, prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MarkdownViewer } from "../customView/markdown";
 import { ArrowLeft, Info, Loader, Pencil, Trash } from "lucide-react";
-import { Separator } from "../ui/separator";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import {
   Breadcrumb,
@@ -15,14 +13,18 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { Button, buttonVariants } from "../ui/button";
-import { CommentBox } from "./CommentBox";
+import { buttonVariants } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { StudentBox } from "../student/StudentsBox";
 
-export const ViewField = ({ modelSlug, id }: any) => {
+export const ViewClass = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+
+
+  
 
   useEffect(() => {
     setModel(allModels.find((model: any) => model.model === modelSlug));
@@ -40,6 +42,7 @@ export const ViewField = ({ modelSlug, id }: any) => {
         setFailed(true);
       });
   };
+  console.log({data});
 
   if (failed) {
     return (
@@ -90,7 +93,7 @@ export const ViewField = ({ modelSlug, id }: any) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{data.title}</BreadcrumbPage>
+            <BreadcrumbPage>{data.name}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -115,23 +118,14 @@ export const ViewField = ({ modelSlug, id }: any) => {
           </Link>
         </div>
       </div>
-      <p className="text-5xl font-semibold ">{data.title}</p>
-
+      <p className="text-5xl font-semibold ">{data.name}</p>
       <Separator className="h-1 w-full my-2" />
       <div className="flex flex-row justify-between  mb-10">
-        <div className="flex flex-row flex-wrap">
-          {data?.tags?.map((tag: any) => (
-            <p key={tag} className="text-lg text-muted-foreground mr-2">
-              #{tag[0] === " " ? tag.slice(1) : tag}
-            </p>
-          ))}
-        </div>
         <p className="text-lg text-muted-foreground whitespace-nowrap">
           Updated {timeAgo(data?.updatedAt)}
         </p>
       </div>
-      {/* <MarkdownViewer content={data?.content} />
-      <CommentBox blogId={data?.id} modelSlug={"comment"} /> */}
+      <StudentBox classId={data?.id} modelSlug={"student"} />
     </div>
   );
 };

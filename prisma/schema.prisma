@@ -13,85 +13,164 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  username  String
-  email     String
-  password  String
-  phone     String
-  address   String
-  image     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+//admin is teacher can create students, lectures, classes and tasks
+//normal user is student
+// class have lectures, lectures have tasks, lectures have content,start time and end time
+// students have fees=> hav emonthly scenario
+// students have guardian => optional
+// students have class
 
+// ------------------------------------------ Normal models fo normal data managements
 model Teacher {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  username      String
   email         String
   password      String
+  qualification String
   phone         String
   address       String
-  salary        Int
-  qualification String
   image         String
-  tasks         Tasks[]
-  hireDate      DateTime @default(now())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
-enum Status {
-  PENDING
-  COMPLETED
-  CANCELED
-  INPROGRESS
-}
+model Student {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  regId       String
+  name        String
+  email       String
+  password    String
+  phone       String
+  address     String
+  image       String
+  socialLinks String[]
+  education   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  guardian    Guardian?
 
-model Tasks {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
-  dueDate     DateTime @default(now())
-  status      Status   @default(PENDING)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  studentId   String   @db.ObjectId
-  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  teacherId   String   @db.ObjectId
-  teacher     Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  classes ClassToStudent[]
 }
 
 model Class {
-  id       String     @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  students Student[]
-  lectures Lectures[]
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  descriptiton String
+  image        String
+  duration     Int //month from start date
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  lectures     Lecture[]
+  students     ClassToStudent[]
 }
 
-model Student {
+model Lecture {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  class     Class    @relation(fields: [classId], references: [id])
+  classId   String   @unique @db.ObjectId
+  duration  Int //hours from start date
   name      String
-  email     String
-  password  String
-  dob       DateTime
-  address   String
-  phone     String
-  gender    String
-  image     String
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tasks     Tasks[]
-  classId   String   @db.ObjectId
-  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tasks     Task[]
 }
 
-model Lectures {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  content String
-  classId String @db.ObjectId
-  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+model Task {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  content           String
+  delievertCreteria String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lecture           Lecture  @relation(fields: [lectureId], references: [id])
+  lectureId         String   @unique @db.ObjectId
+
+  taskCompleted TaskCompleted[]
 }
+
+// ----------------------------------------------------  Relational models
+
+model Guardian {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  relation  String
+  phone     String
+  address   String
+  user      Student @relation(fields: [studentId], references: [id])
+  studentId String  @unique @db.ObjectId
+}
+
+model ClassToStudent {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  start        DateTime
+  end          DateTime
+  Student      Student  @relation(fields: [studentId], references: [id])
+  studentId    String   @db.ObjectId
+  Class        Class    @relation(fields: [classId], references: [id])
+  classId      String   @db.ObjectId
+  progress     Int      @default(0)
+  feeSubmitted Fee[]
+
+  lectureCompleted LectureCompleted[]
+
+  joinDate  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum LectureStatus {
+  COMPLETED
+  IN_COMPLETE
+  IN_PROGRESS
+}
+
+model LectureCompleted {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  status           LectureStatus   @default(IN_PROGRESS)
+  start            DateTime
+  end              DateTime
+  ClassToStudent   ClassToStudent? @relation(fields: [classToStudentId], references: [id])
+  classToStudentId String?         @db.ObjectId
+  taskCompleted    TaskCompleted[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+enum TaskStatus {
+  COMPLETED
+  IN_COMPLETE
+  APPROVED
+  NOT_APPROVED
+}
+
+model TaskCompleted {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  Task               Task             @relation(fields: [taskId], references: [id])
+  taskId             String           @db.ObjectId
+  status             TaskStatus       @default(IN_COMPLETE)
+  LectureCompleted   LectureCompleted @relation(fields: [lectureCompletedId], references: [id])
+  lectureCompletedId String           @db.ObjectId
+  comment            String
+  delivery           String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+enum FeeStatus {
+  SUBMITTED
+  NOT_SUBMITTED
+  LATE_SUBMITTED
+}
+
+model Fee {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  total            Int
+  month            String
+  dueDate          DateTime
+  submittedDate    DateTime
+  status           FeeStatus       @default(NOT_SUBMITTED)
+  ClassToStudent   ClassToStudent? @relation(fields: [classToStudentId], references: [id])
+  classToStudentId String?         @db.ObjectId
+}
+
+// -----------------------------------------------------------

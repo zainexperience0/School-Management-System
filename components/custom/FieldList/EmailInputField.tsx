@@ -25,15 +25,6 @@ export const EmailInputField = ({ field, record, setRecord }: any) => (
         setRecord(record_1);
       }}
     />
-    {getStrengthMessage(record[field.slug]) && (
-      <p
-        className={`text-${getStrengthClass(
-          record[field.slug]
-        )} mt-2 text-muted-foreground text-xs`}
-      >
-        {getStrengthMessage(record[field.slug])}
-      </p>
-    )}
   </div>
 );
 
@@ -53,25 +44,6 @@ const getStrengthClass = (email: string) => {
       return "green-500";
     default:
       return "gray-500";
-  }
-};
-
-const getStrengthMessage = (email: string) => {
-  if (!email) {
-    return null;
-  }
-
-  const strength = calculateEmailStrength(email);
-
-  switch (strength) {
-    case "weak":
-      return "Incomplete Email";
-    case "medium":
-      return "Almost Complete Email";
-    case "strong":
-      return "Perfect Email!";
-    default:
-      return null;
   }
 };
 

@@ -15,6 +15,7 @@ export async function GET(req: NextRequest, params: any) {
   const fields = url.searchParams.get("fields") as any;
   const sortBy = url.searchParams.get("sortby") as any;
   const sortField = url.searchParams.get("sortfield") as any;
+  const act = url.searchParams.get("act") as any;
 
   // console.log({ model_name, id, page, search, fields });
 
@@ -33,6 +34,7 @@ export async function GET(req: NextRequest, params: any) {
       ?.map((field) => {
         selectObj[field.slug] = true;
       });
+      
 
     const data = await prismaInstance[model_name].findUnique({
       where: { id },

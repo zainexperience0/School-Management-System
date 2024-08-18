@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import { generateFromEmail } from "unique-username-generator";
+import Image from "next/image";
 
 export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
   const [data, setData] = useState({ ...relation });
@@ -24,6 +25,7 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
   const [loading, setLoading] = useState(true);
 
   const [isRelational, setIsRelational] = useState(false);
+  
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -92,6 +94,8 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
     setLoading(false);
   }, []);
 
+  console.log({ data });
+  
   if (!model) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
@@ -144,6 +148,13 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
+      <Image
+        src={data?.image}
+        alt={model.name}
+        width={200}
+        height={200}
+        className="mx-auto"
+      />
       <InputWrapper model={model} data={data} setData={setData} action={"create"} />
       <Button
         onClick={() => {
