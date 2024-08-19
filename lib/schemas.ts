@@ -349,7 +349,7 @@ export const allModels = [
           "update",
           "delete",
         ],
-        frontend: ["list", "view", "update", "delete"],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
           return [];
         },
@@ -583,6 +583,105 @@ export const allModels = [
       {
         name: "class",
         slug: "class",
+        type: "relation",
+        defaultValue: "",
+        required: true,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Created At",
+        slug: "createdAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany"],
+        frontend: ["list","view"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Updated At",
+        slug: "updatedAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany"],
+        frontend: ["list","view"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+    ],
+  },
+  {
+    name: "Tasks",
+    model: "task",
+    meta: {
+      title: "name",
+    },
+    updateField: "updatedAt",
+    searchConfig: {
+      searchFields: ["name"],
+      sortBy: "desc",
+      sortField: "createdAt",
+    },
+    fields: [
+      {
+        name: "Name",
+        slug: "name",
+        type: "textInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany","create","update","delete"],
+        frontend: ["list","view","update","delete","create"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Content",
+        slug: "content",
+        type: "markdownInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany","create","update","delete"],
+        frontend: ["list","view","update","delete","create"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Acceptance Criteria",
+        slug: "delieveryCreteria",
+        type: "markdownInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany","create","update","delete"],
+        frontend: ["list","view","update","delete","create"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Lectures",
+        slug: "lecture",
         type: "relation",
         defaultValue: "",
         required: true,

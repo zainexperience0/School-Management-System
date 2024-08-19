@@ -57,7 +57,7 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
           if (!callbackFn) {
             window.history.back();
           } else {
-            callbackFn();
+            window.location.href = "/"
           }
         }, 2000);
       })

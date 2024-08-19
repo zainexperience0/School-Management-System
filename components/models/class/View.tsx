@@ -15,7 +15,6 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { StudentBox } from "../student/StudentsBox";
 
 export const ViewClass = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
@@ -125,7 +124,6 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           Updated {timeAgo(data?.updatedAt)}
         </p>
       </div>
-      <StudentBox classId={data?.id} modelSlug={"student"} />
     </div>
   );
 };

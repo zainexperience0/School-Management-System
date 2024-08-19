@@ -14,6 +14,8 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
+import { generateFromEmail } from "unique-username-generator";
+import Image from "next/image";
 import {
   Select,
   SelectContent,
@@ -21,9 +23,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
-export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
-  const [classes, setClasses] = useState<any[]>([]);
+export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
+  const [socialLinks, setSocialLinks] = useState<any>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -33,19 +36,11 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
   const [isRelational, setIsRelational] = useState(false);
 
   useEffect(() => {
-    axios
-      .get("/api/v1/dynamic/class")
-      .then((resp: any) => {
-        setClasses(resp.data);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
-  }, []);
-
-  // console.log(classes);
-
-  // console.log({ data });
+    setData((prevData: any) => ({
+      ...prevData,
+      socialLinks: [JSON.stringify(socialLinks)],
+    }));
+  }, [socialLinks]);
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -65,7 +60,9 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, data)
+      .post(`/api/v1/dynamic/${model.model}`, {
+        ...data,
+      })
       .then((resp: any) => {
         // console.log(resp);
         setCreating(false);
@@ -73,9 +70,9 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
         setTimeout(() => {
           resetFields();
           if (!callbackFn) {
-            window.history.back();
+            window.location.href = "/main/class";
           } else {
-            callbackFn();
+            callbackFn()
           }
         }, 2000);
       })
@@ -110,6 +107,8 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
 
     setLoading(false);
   }, []);
+
+  console.log({ data });
 
   if (!model) {
     return (
@@ -163,36 +162,54 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
+      <Image
+        src={data?.image}
+        alt={model.name}
+        width={200}
+        height={200}
+        className="mx-auto"
+      />
       <InputWrapper
         model={model}
         data={data}
         setData={setData}
         action={"create"}
       />
-      <Select
-        onValueChange={(e) =>
-          setData({
-            ...data,
-            class: {
-              connect: {
-                id: e,
-              },
-            },
-          })
+       <Select
+        onValueChange={(value) =>
+          setSocialLinks((prevLinks: any) => ({ ...prevLinks, [value]: "" }))
         }
       >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Class" />
+        <SelectTrigger>
+          <SelectValue placeholder="Social Links" />
         </SelectTrigger>
         <SelectContent>
-          {classes.map((option: any) => (
-            <SelectItem key={option.id} value={option.id}>
-              {option.name}
-            </SelectItem>
-          ))}
+          <SelectItem value="Twitter">Twitter</SelectItem>
+          <SelectItem value="Facebook">Facebook</SelectItem>
+          <SelectItem value="Instagram">Instagram</SelectItem>
+          <SelectItem value="LinkedIn">LinkedIn</SelectItem>
         </SelectContent>
       </Select>
+      {Object.keys(socialLinks).map((key: any) => (
+        
+          <div key={key} className="mt-2 flex items-center justify-center space-x-4">
+            <h1 className="text-md text-muted-foreground">{key}</h1>
+            <Input
+            key={key}
+            type="textInput"
+            placeholder={key}
+            onChange={(e) => {
+              setSocialLinks({
+                ...socialLinks,
+                [key]: e.target.value,
+              });
+            }}
+            className="mt-2"
+          />
+          </div>
+        ))}
       <Button
+      className="mt-6"
         onClick={() => {
           createRecord();
         }}

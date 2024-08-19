@@ -9,6 +9,8 @@ import { EditField } from "@/components/models/EditField";
 import { ViewField } from "@/components/models/viewField";
 import { allModels } from "@/lib/schemas";
 import { CreateLecture } from "@/components/models/lecture/create";
+import { CreateTasks } from "@/components/models/tasks/create";
+import { RegisterStudent } from "@/components/models/student/Create";
 
 const DynamicPage = ({ params, searchParams }: any) => {
   const dynamicParameters = params.fields;
@@ -29,7 +31,7 @@ const DynamicPage = ({ params, searchParams }: any) => {
   if (action) {
     switch (action) {
       case "create":
-        if (model === "admin") {
+        if (model === "teacher") {
           return (
             <RegisterAdmin
               model={allModels.find((m) => m.model === model)}
@@ -43,7 +45,21 @@ const DynamicPage = ({ params, searchParams }: any) => {
               page={true}
             />
           );
-        } else if (model && !["admin", "teacher"].includes(model)) {
+        } else if (model === "student") {
+          return (
+            <RegisterStudent
+              model={allModels.find((m) => m.model === model)}
+              page={true}
+            />
+          );
+        } else if (model === "task") {
+          return (
+            <CreateTasks
+              model={allModels.find((m) => m.model === model)}
+              page={true}
+            />
+          );
+        } else if (model && !["teacher", "class", "lecture", "student"].includes(model)) {
           return (
             <CreateField
               model={allModels.find((m) => m.model === model)}
@@ -63,11 +79,7 @@ const DynamicPage = ({ params, searchParams }: any) => {
 
       case "delete":
         return (
-          <DeleteField
-            modelSlug={model}
-            id={fieldId}
-            field={deleteFieldKey}
-          />
+          <DeleteField modelSlug={model} id={fieldId} field={deleteFieldKey} />
         );
 
       default:

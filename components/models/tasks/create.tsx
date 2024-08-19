@@ -22,8 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
-  const [classes, setClasses] = useState<any[]>([]);
+export const CreateTasks = ({ model, callbackFn, relation, page }: any) => {
+  const [lectures, setLectures] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -34,16 +34,16 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
 
   useEffect(() => {
     axios
-      .get("/api/v1/dynamic/class")
+      .get("/api/v1/dynamic/lecture")
       .then((resp: any) => {
-        setClasses(resp.data);
+        setLectures(resp.data);
       })
       .catch((err: any) => {
         console.log(err);
       });
   }, []);
 
-  // console.log(classes);
+  console.log(lectures);
 
   // console.log({ data });
 
@@ -173,7 +173,7 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
         onValueChange={(e) =>
           setData({
             ...data,
-            class: {
+            lecture: {
               connect: {
                 id: e,
               },
@@ -182,10 +182,10 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
         }
       >
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Class" />
+          <SelectValue placeholder="Select Lecture" />
         </SelectTrigger>
         <SelectContent>
-          {classes.map((option: any) => (
+          {lectures.map((option: any) => (
             <SelectItem key={option.id} value={option.id}>
               {option.name}
             </SelectItem>
