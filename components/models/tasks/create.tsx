@@ -14,16 +14,8 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-export const CreateTasks = ({ model, callbackFn, relation, page }: any) => {
-  const [lectures, setLectures] = useState<any[]>([]);
+export const CreateTasks = ({ model, callbackFn, relation, page, id }: any) => {
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -32,18 +24,7 @@ export const CreateTasks = ({ model, callbackFn, relation, page }: any) => {
 
   const [isRelational, setIsRelational] = useState(false);
 
-  useEffect(() => {
-    axios
-      .get("/api/v1/dynamic/lecture")
-      .then((resp: any) => {
-        setLectures(resp.data);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
-  }, []);
-
-  console.log(lectures);
+  // console.log(lectures);
 
   // console.log({ data });
 
@@ -65,7 +46,10 @@ export const CreateTasks = ({ model, callbackFn, relation, page }: any) => {
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, data)
+      .post(`/api/v1/dynamic/${model.model}`, {
+        ...data,
+        lecture: { connect: { id: id } },
+      })
       .then((resp: any) => {
         // console.log(resp);
         setCreating(false);
@@ -169,29 +153,6 @@ export const CreateTasks = ({ model, callbackFn, relation, page }: any) => {
         setData={setData}
         action={"create"}
       />
-      <Select
-        onValueChange={(e) =>
-          setData({
-            ...data,
-            lecture: {
-              connect: {
-                id: e,
-              },
-            },
-          })
-        }
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Lecture" />
-        </SelectTrigger>
-        <SelectContent>
-          {lectures.map((option: any) => (
-            <SelectItem key={option.id} value={option.id}>
-              {option.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
       <Button
         onClick={() => {
           createRecord();

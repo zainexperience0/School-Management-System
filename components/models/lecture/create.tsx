@@ -169,29 +169,31 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
         setData={setData}
         action={"create"}
       />
-      <Select
-        onValueChange={(e) =>
-          setData({
-            ...data,
-            class: {
-              connect: {
-                id: e,
-              },
-            },
-          })
-        }
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Class" />
-        </SelectTrigger>
-        <SelectContent>
-          {classes.map((option: any) => (
-            <SelectItem key={option.id} value={option.id}>
-              {option.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+     {!relation && (
+       <Select
+       onValueChange={(e) =>
+         setData({
+           ...data,
+           class: {
+             connect: {
+               id: e,
+             },
+           },
+         })
+       }
+     >
+       <SelectTrigger className="w-[180px]">
+         <SelectValue placeholder="Select Class" />
+       </SelectTrigger>
+       <SelectContent>
+         {classes.map((option: any) => (
+           <SelectItem key={option.id} value={option.id}>
+             {option.name}
+           </SelectItem>
+         ))}
+       </SelectContent>
+     </Select>
+     )}
       <Button
         onClick={() => {
           createRecord();

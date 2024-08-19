@@ -1,4 +1,5 @@
 "use client";
+
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -14,8 +15,6 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import { generateFromEmail } from "unique-username-generator";
-import Image from "next/image";
 import {
   Select,
   SelectContent,
@@ -23,10 +22,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 
-export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
-  const [socialLinks, setSocialLinks] = useState<any>([]);
+export const CreateStudentsInClasses = ({
+  model,
+  callbackFn,
+  relation,
+  page,
+  id,
+}: any) => {
+  const [students, setStudents] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -36,11 +40,17 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
   const [isRelational, setIsRelational] = useState(false);
 
   useEffect(() => {
-    setData((prevData: any) => ({
-      ...prevData,
-      socialLinks: [JSON.stringify(socialLinks)],
-    }));
-  }, [socialLinks]);
+    axios
+      .get("/api/v1/dynamic/student")
+      .then((resp: any) => {
+        setStudents(resp.data);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  }, []);
+
+  // console.log({ students, classes });
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -62,17 +72,17 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
     axios
       .post(`/api/v1/dynamic/${model.model}`, {
         ...data,
+        class: { connect: { id: id } },
       })
       .then((resp: any) => {
-        // console.log(resp);
         setCreating(false);
         setCreateSuccess(true);
         setTimeout(() => {
           resetFields();
           if (!callbackFn) {
-            window.location.href = "/main/class";
+            window.history.back();
           } else {
-            callbackFn()
+            callbackFn();
           }
         }, 2000);
       })
@@ -102,13 +112,10 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
     const isRelationalField = schemaRelationalFields?.some(
       (field: any) => !propRelationalFields?.includes(field)
     );
-    // console.log({ isRelationalField });
     setIsRelational(!!isRelationalField);
 
     setLoading(false);
   }, []);
-
-  // console.log({ data });
 
   if (!model) {
     return (
@@ -146,7 +153,7 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto my-10 px-2">
+    <div className="max-w-5xl mx-auto my-10 px-4 space-y-6">
       {page && (
         <Breadcrumb className="mb-5">
           <BreadcrumbList>
@@ -162,65 +169,55 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <Image
-        src={data?.image}
-        alt={model.name}
-        width={200}
-        height={200}
-        className="mx-auto"
-      />
       <InputWrapper
         model={model}
         data={data}
         setData={setData}
         action={"create"}
       />
-       <Select
-        onValueChange={(value) =>
-          setSocialLinks((prevLinks: any) => ({ ...prevLinks, [value]: "" }))
-        }
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Social Links" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Twitter">Twitter</SelectItem>
-          <SelectItem value="Facebook">Facebook</SelectItem>
-          <SelectItem value="Instagram">Instagram</SelectItem>
-          <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-        </SelectContent>
-      </Select>
-      {Object.keys(socialLinks).map((key: any) => (
-        
-          <div key={key} className="mt-2 flex items-center justify-center space-x-4">
-            <h1 className="text-md text-muted-foreground">{key}</h1>
-            <Input
-            key={key}
-            type="textInput"
-            placeholder={key}
-            onChange={(e) => {
-              setSocialLinks({
-                ...socialLinks,
-                [key]: e.target.value,
-              });
-            }}
-            className="mt-2"
-          />
-          </div>
-        ))}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Select
+          onValueChange={(e) =>
+            setData({
+              ...data,
+              student: {
+                connect: {
+                  id: e,
+                },
+              },
+            })
+          }
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select Student" />
+          </SelectTrigger>
+          <SelectContent>
+            {students.map((option: any) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <Button
-      className="mt-6"
-        onClick={() => {
-          createRecord();
-        }}
+        onClick={() => createRecord()}
         disabled={creating || createSuccess || createFail}
+        className="w-full sm:w-auto"
       >
         {creating && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-        {creating && "Creating..."}
-        {!creating && !createSuccess && !createFail && "Submit"}
-        {createSuccess && <CheckCircle className="h-4 w-4 mr-2" />}
-        {createSuccess && `${model.name} created!`}
-        {createFail && "Failed to create!"}
+        {creating ? (
+          "Creating..."
+        ) : createSuccess ? (
+          <>
+            <CheckCircle className="h-4 w-4 mr-2" />
+            {model.name} created!
+          </>
+        ) : createFail ? (
+          "Failed to create!"
+        ) : (
+          "Submit"
+        )}
       </Button>
     </div>
   );

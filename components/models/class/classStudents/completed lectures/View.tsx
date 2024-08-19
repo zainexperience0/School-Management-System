@@ -15,16 +15,15 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ListLecturesData } from "../lecture/List";
-import { ListStudents } from "../student/List";
-import { ListClassStudents } from "./classStudents/List";
+import { ListCompletedTasks } from "./taskCompleted/List";
 
-export const ViewClass = ({ modelSlug, id }: any) => {
+export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+
+  console.log({ data });
 
   useEffect(() => {
     setModel(allModels.find((model: any) => model.model === modelSlug));
@@ -92,7 +91,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{data.name}</BreadcrumbPage>
+            <BreadcrumbPage>{data.status}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -122,22 +121,9 @@ export const ViewClass = ({ modelSlug, id }: any) => {
       <p className="text-lg text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
-      <Tabs defaultValue="lecture" className="w-full">
-        <TabsList className="w-full border-b border-muted">
-          <TabsTrigger value="lecture" className="flex-1 text-center py-2">
-            Lecture
-          </TabsTrigger>
-          <TabsTrigger value="students" className="flex-1 text-center py-2">
-            Students
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="lecture">
-          <ListLecturesData modelSlug={"lecture"} />
-        </TabsContent>
-        <TabsContent value="students">
-          <ListClassStudents modelSlug={"classToStudent"} id={data.id}/>
-        </TabsContent>
-      </Tabs>
+      <div>
+        <ListCompletedTasks modelSlug={"taskCompleted"} id={data.id}/>
+      </div>
     </div>
   );
 };

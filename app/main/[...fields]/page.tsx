@@ -11,84 +11,147 @@ import { allModels } from "@/lib/schemas";
 import { CreateLecture } from "@/components/models/lecture/create";
 import { CreateTasks } from "@/components/models/tasks/create";
 import { RegisterStudent } from "@/components/models/student/Create";
+import { CreateClass } from "@/components/models/class/Create";
+import { ViewLecture } from "@/components/models/lecture/View";
+import { CreateStudentsInClasses } from "@/components/models/class/classStudents/Create";
+import { ViewStudentInClass } from "@/components/models/class/classStudents/View";
+import { FeeCreate } from "@/components/models/class/classStudents/fee/Create";
+import { LectureCompleteCreate } from "@/components/models/class/classStudents/completed lectures/Create";
+import { ViewLectureCompleted } from "@/components/models/class/classStudents/completed lectures/View";
+import { TaskCompleteCreate } from "@/components/models/class/classStudents/completed lectures/taskCompleted/Create";
 
 const DynamicPage = ({ params, searchParams }: any) => {
-  const dynamicParameters = params.fields;
+  const dynamicParameters = params.fields || [];
   const model = dynamicParameters[0];
   const action = dynamicParameters[1];
   const fieldId = dynamicParameters[2];
 
   const deleteFieldKey = searchParams?.deletekey;
 
-  if (action === "view" && model === "class") {
-    return <ViewClass modelSlug={model} id={fieldId} />;
-  }
+  switch (action) {
+    case "view":
+      if (model === "class") {
+        return <ViewClass modelSlug={model} id={fieldId} />;
+      }
+      if (model === "lecture") {
+        return <ViewLecture modelSlug={model} id={fieldId} />;
+      }
+      if (model === "classToStudent") {
+        return <ViewStudentInClass modelSlug={model} id={fieldId} />;
+      }
+      if (model === "lectureCompleted") {
+        return <ViewLectureCompleted modelSlug={model} id={fieldId} />;
+      }
+      if (fieldId && !["edit", "delete"].includes(action)) {
+        return <ViewField modelSlug={model} id={fieldId} />;
+      }
 
-  if (fieldId && !["edit", "delete"].includes(action)) {
-    return <ViewField modelSlug={model} id={fieldId} />;
-  }
+      break;
 
-  if (action) {
-    switch (action) {
-      case "create":
-        if (model === "teacher") {
+    case "create":
+      switch (model) {
+        case "teacher":
           return (
             <RegisterAdmin
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
           );
-        } else if (model === "lecture") {
+        case "lecture":
           return (
             <CreateLecture
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
           );
-        } else if (model === "student") {
+        case "classToStudent":
+          return (
+            <CreateStudentsInClasses
+              id={searchParams?.classId}
+              model={allModels.find((m) => m.model === model)}
+              page={true}
+            />
+          );
+          case "taskCompleted":
+            return (
+              <TaskCompleteCreate
+                id={searchParams?.lectureCompleted}
+                model={allModels.find((m) => m.model === model)}
+                page={true}
+              />
+            );
+        case "student":
           return (
             <RegisterStudent
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
           );
-        } else if (model === "task") {
+        case "task":
           return (
             <CreateTasks
+              id={searchParams?.lectureId}
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
           );
-        } else if (model && !["teacher", "class", "lecture", "student"].includes(model)) {
+          case "lectureCompleted":
+            return (
+              <LectureCompleteCreate
+                id={searchParams?.student_id}
+                model={allModels.find((m) => m.model === model)}
+                page={true}
+              />
+            );
+        case "class":
           return (
-            <CreateField
+            <CreateClass
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
           );
-        }
-        break;
+        case "fee":
+          return (
+            <FeeCreate
+              id={searchParams?.student_id}
+              model={allModels.find((m) => m.model === model)}
+              page={true}
+            />
+          );
+        default:
+          if (
+            model &&
+            !["teacher", "class", "lecture", "student", "task"].includes(model)
+          ) {
+            return (
+              <CreateField
+                model={allModels.find((m) => m.model === model)}
+                page={true}
+              />
+            );
+          }
+          break;
+      }
+      break;
 
-      case "edit":
-        return (
-          <EditField
-            model={allModels.find((m) => m.model === model)}
-            id={fieldId}
-          />
-        );
+    case "edit":
+      return (
+        <EditField
+          model={allModels.find((m) => m.model === model)}
+          id={fieldId}
+        />
+      );
 
-      case "delete":
-        return (
-          <DeleteField modelSlug={model} id={fieldId} field={deleteFieldKey} />
-        );
+    case "delete":
+      return (
+        <DeleteField modelSlug={model} id={fieldId} field={deleteFieldKey} />
+      );
 
-      default:
-        return null;
-    }
-  }
-
-  if (model === "teacher") {
-    return <AdminPanel modelSlug={model} />;
+    default:
+      if (model === "teacher") {
+        return <AdminPanel modelSlug={model} />;
+      }
+      break;
   }
 
   return null; // Fallback if no conditions are met

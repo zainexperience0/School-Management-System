@@ -16,11 +16,9 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ListLecturesData } from "../lecture/List";
-import { ListStudents } from "../student/List";
-import { ListClassStudents } from "./classStudents/List";
+import { ListTasks } from "../tasks/List";
 
-export const ViewClass = ({ modelSlug, id }: any) => {
+export const ViewLecture = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -122,21 +120,19 @@ export const ViewClass = ({ modelSlug, id }: any) => {
       <p className="text-lg text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
-      <Tabs defaultValue="lecture" className="w-full">
+      <Tabs defaultValue="tasks" className="w-full">
         <TabsList className="w-full border-b border-muted">
-          <TabsTrigger value="lecture" className="flex-1 text-center py-2">
-            Lecture
+          <TabsTrigger value="tasks" className="flex-1 text-center py-2">
+            Tasks
           </TabsTrigger>
           <TabsTrigger value="students" className="flex-1 text-center py-2">
-            Students
+            TasksCompleted
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="lecture">
-          <ListLecturesData modelSlug={"lecture"} />
+        <TabsContent value="tasks">
+          <ListTasks modelSlug={"task"} id={data.id} />
         </TabsContent>
-        <TabsContent value="students">
-          <ListClassStudents modelSlug={"classToStudent"} id={data.id}/>
-        </TabsContent>
+        <TabsContent value="students"></TabsContent>
       </Tabs>
     </div>
   );

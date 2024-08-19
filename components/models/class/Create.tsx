@@ -1,5 +1,5 @@
 "use client";
-import { prePath } from "@/lib/schemas";
+import {  prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
@@ -14,19 +14,8 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import { generateFromEmail } from "unique-username-generator";
-import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 
-export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
-  const [socialLinks, setSocialLinks] = useState<any>([]);
+export const CreateClass = ({ model, callbackFn, relation, page }: any) => {
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -34,13 +23,6 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
   const [loading, setLoading] = useState(true);
 
   const [isRelational, setIsRelational] = useState(false);
-
-  useEffect(() => {
-    setData((prevData: any) => ({
-      ...prevData,
-      socialLinks: [JSON.stringify(socialLinks)],
-    }));
-  }, [socialLinks]);
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -60,9 +42,7 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, {
-        ...data,
-      })
+      .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
         // console.log(resp);
         setCreating(false);
@@ -70,9 +50,9 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
         setTimeout(() => {
           resetFields();
           if (!callbackFn) {
-            window.location.href = "/main/class";
+            window.history.back();
           } else {
-            callbackFn()
+            callbackFn();
           }
         }, 2000);
       })
@@ -107,8 +87,6 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
 
     setLoading(false);
   }, []);
-
-  // console.log({ data });
 
   if (!model) {
     return (
@@ -162,54 +140,8 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <Image
-        src={data?.image}
-        alt={model.name}
-        width={200}
-        height={200}
-        className="mx-auto"
-      />
-      <InputWrapper
-        model={model}
-        data={data}
-        setData={setData}
-        action={"create"}
-      />
-       <Select
-        onValueChange={(value) =>
-          setSocialLinks((prevLinks: any) => ({ ...prevLinks, [value]: "" }))
-        }
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Social Links" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Twitter">Twitter</SelectItem>
-          <SelectItem value="Facebook">Facebook</SelectItem>
-          <SelectItem value="Instagram">Instagram</SelectItem>
-          <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-        </SelectContent>
-      </Select>
-      {Object.keys(socialLinks).map((key: any) => (
-        
-          <div key={key} className="mt-2 flex items-center justify-center space-x-4">
-            <h1 className="text-md text-muted-foreground">{key}</h1>
-            <Input
-            key={key}
-            type="textInput"
-            placeholder={key}
-            onChange={(e) => {
-              setSocialLinks({
-                ...socialLinks,
-                [key]: e.target.value,
-              });
-            }}
-            className="mt-2"
-          />
-          </div>
-        ))}
+      <InputWrapper model={model} data={data} setData={setData} action={"create"} />
       <Button
-      className="mt-6"
         onClick={() => {
           createRecord();
         }}

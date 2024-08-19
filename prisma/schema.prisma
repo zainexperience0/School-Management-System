@@ -68,7 +68,7 @@ model Class {
 model Lecture {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  classId   String   @unique @db.ObjectId
+  classId   String   @db.ObjectId
   duration  Int //hours from start date
   name      String
   content   String
@@ -77,7 +77,7 @@ model Lecture {
   tasks     Task[]
 }
 
-model Task { //done
+model Task {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   content           String
@@ -85,7 +85,7 @@ model Task { //done
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   lecture           Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  lectureId         String   @unique @db.ObjectId
+  lectureId         String   @db.ObjectId
 
   taskCompleted TaskCompleted[]
 }
@@ -98,7 +98,7 @@ model Guardian {
   relation  String
   phone     String
   address   String
-  student      Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   studentId String  @unique @db.ObjectId
 }
 

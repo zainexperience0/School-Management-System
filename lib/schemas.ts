@@ -26,11 +26,18 @@ export const allModels = [
         required: true, // tells whether this field is required in UI inputs
         dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Qualification",
@@ -40,11 +47,18 @@ export const allModels = [
         required: true, // tells whether this field is required in UI inputs
         dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Email",
@@ -54,11 +68,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Password",
@@ -68,13 +89,7 @@ export const allModels = [
         required: false, // tells whether this field is required in UI inputs
         dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: [
-          "findFirst",
-          "findUnique",
-          "create",
-          "update",
-          "delete",
-        ],
+        backend: ["findFirst", "findUnique", "create", "update", "delete"],
         frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
           return "";
@@ -151,11 +166,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Updated At",
@@ -165,11 +180,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
     ],
   },
@@ -194,11 +209,18 @@ export const allModels = [
         required: true, // tells whether this field is required in UI inputs
         dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Reg No",
@@ -208,11 +230,18 @@ export const allModels = [
         required: true, // tells whether this field is required in UI inputs
         dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return nanoid(6)
-        }
+          return nanoid(6);
+        },
       },
       {
         name: "Email",
@@ -222,11 +251,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Password",
@@ -236,13 +272,7 @@ export const allModels = [
         required: false, // tells whether this field is required in UI inputs
         dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: [
-          "findFirst",
-          "findUnique",
-          "create",
-          "update",
-          "delete",
-        ],
+        backend: ["findFirst", "findUnique", "create", "update", "delete"],
         frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
           return "";
@@ -383,11 +413,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Updated At",
@@ -397,11 +427,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
     ],
   },
@@ -426,11 +456,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Description",
@@ -440,11 +477,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Image",
@@ -496,11 +540,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Updated At",
@@ -510,11 +554,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
     ],
   },
@@ -539,11 +583,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Content",
@@ -553,11 +604,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Duration",
@@ -602,11 +660,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Updated At",
@@ -616,11 +674,415 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
+      },
+    ],
+  },
+  {
+    name: "StudentsInClass",
+    model: "classToStudent",
+    meta: {
+      title: "start",
+    },
+    updateField: "joinDate",
+    searchConfig: {
+      searchFields: ["start"],
+      sortBy: "desc",
+      sortField: "joinDate",
+    },
+    fields: [
+      {
+        name: "Start Date",
+        slug: "start",
+        type: "dateInput",
+        defaultValue: new Date(),
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return new Date();
+        },
+      },
+      {
+        name: "End Date",
+        slug: "end",
+        type: "dateInput",
+        defaultValue: new Date(),
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return new Date();
+        },
+      },
+      {
+        name: "Student Progress",
+        slug: "progress",
+        type: "numberInput",
+        defaultValue: 0,
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return 0;
+        },
+      },
+      {
+        name: "class",
+        slug: "class",
+        type: "relation",
+        defaultValue: "",
+        required: false,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "student",
+        slug: "student",
+        type: "relation",
+        defaultValue: "",
+        required: false,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Join date",
+        slug: "joinDate",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Updated At",
+        slug: "updatedAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+    ],
+  },
+  {
+    name: "Fees",
+    model: "fee",
+    meta: {
+      title: "month",
+    },
+    updateField: "dueDate",
+    searchConfig: {
+      searchFields: ["month"],
+      sortBy: "desc",
+      sortField: "dueDate",
+    },
+    fields: [
+      {
+        name: "Due Date",
+        slug: "dueDate",
+        type: "dateInput",
+        defaultValue: new Date(),
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return new Date();
+        },
+      },
+      {
+        name: "Submitted Date",
+        slug: "submittedDate",
+        type: "dateInput",
+        defaultValue: new Date(),
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return new Date();
+        },
+      },
+      {
+        name: "Total Fee",
+        slug: "total",
+        type: "numberInput",
+        defaultValue: 0,
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return 0;
+        },
+      },
+      {
+        name: "classToStudent",
+        slug: "classToStudent",
+        type: "relation",
+        defaultValue: "",
+        required: false,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "month",
+        slug: "month",
+        type: "selectInput",
+        defaultValue: "January",
+        required: false,
+        options: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "January";
+        },
+      },
+      {
+        name: "Status",
+        slug: "status",
+        type: "selectInput",
+        defaultValue: "NOT_SUBMITTED",
+        required: false,
+        options: ["SUBMITTED", "NOT_SUBMITTED", "LATE_SUBMITTED"],
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "NOT_SUBMITTED";
+        },
+      },
+    ],
+  },
+  {
+    name: "LectureCompleted",
+    model: "lectureCompleted",
+    meta: {
+      title: "start",
+    },
+    updateField: "updatedAt",
+    searchConfig: {
+      searchFields: ["month"],
+      sortBy: "desc",
+      sortField: "updatedAt",
+    },
+    fields: [
+      {
+        name: "start",
+        slug: "start",
+        type: "dateInput",
+        defaultValue: new Date(),
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return new Date();
+        },
+      },
+      {
+        name: "End",
+        slug: "end",
+        type: "dateInput",
+        defaultValue: new Date(),
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return new Date();
+        },
+      },
+      {
+        name: "classToStudent",
+        slug: "classToStudent",
+        type: "relation",
+        defaultValue: "",
+        required: false,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Status",
+        slug: "status",
+        type: "selectInput",
+        defaultValue: "IN_COMPLETE",
+        required: false,
+        options: ["COMPLETED", "IN_COMPLETE", "IN_PROGRESS"],
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "IN_COMPLETE";
+        },
+      },
+      {
+        name: "Created At",
+        slug: "createdAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Updated At",
+        slug: "updatedAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
       },
     ],
   },
@@ -645,11 +1107,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Content",
@@ -659,11 +1128,18 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Acceptance Criteria",
@@ -673,18 +1149,25 @@ export const allModels = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Lectures",
         slug: "lecture",
         type: "relation",
         defaultValue: "",
-        required: true,
+        required: false,
         dataType: "relation",
         customClassName: "",
         backend: ["findMany", "findUnique", "create"],
@@ -701,11 +1184,11 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
       {
         name: "Updated At",
@@ -715,17 +1198,150 @@ export const allModels = [
         required: false,
         dataType: "time",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany"],
-        frontend: ["list","view"],
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
         valueGetter: () => {
-          return ""
-        }
+          return "";
+        },
       },
     ],
   },
-
+  {
+    name: "TasksCompleted",
+    model: "taskCompleted",
+    meta: {
+      title: "status",
+    },
+    updateField: "updatedAt",
+    searchConfig: {
+      searchFields: ["month"],
+      sortBy: "desc",
+      sortField: "updatedAt",
+    },
+    fields: [
+      {
+        name: "task",
+        slug: "Task",
+        type: "relation",
+        defaultValue: "",
+        required: false,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "LecturesCompleted",
+        slug: "lectureCompleted",
+        type: "relation",
+        defaultValue: "",
+        required: false,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Status",
+        slug: "status",
+        type: "selectInput",
+        defaultValue: "IN_COMPLETE",
+        required: false,
+        options: ["COMPLETED", "IN_COMPLETE", "APPROVED", "NOT_APPROVED"],
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "IN_COMPLETE";
+        },
+      },
+      {
+        name: "comment",
+        slug: "comment",
+        type: "markdownInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Delivery",
+        slug: "delivery",
+        type: "markdownInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Created At",
+        slug: "createdAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
+        name: "Updated At",
+        slug: "updatedAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst", "findUnique", "findMany"],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+    ],
+  },
 ];
-
 
 export const LoginSchema = [
   {
@@ -749,23 +1365,10 @@ export const LoginSchema = [
         required: false,
         dataType: "string",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
-        valueGetter: () => {
-          return ""
-        }
-      },
-      {
-        name: "Password",
-        slug: "password",
-        type: "passwordInput",
-        defaultValue: "",
-        required: false, // tells whether this field is required in UI inputs
-        dataType: "string", // Schema datatype mapping
-        customClassName: "",
         backend: [
           "findFirst",
           "findUnique",
+          "findMany",
           "create",
           "update",
           "delete",
@@ -775,6 +1378,20 @@ export const LoginSchema = [
           return "";
         },
       },
+      {
+        name: "Password",
+        slug: "password",
+        type: "passwordInput",
+        defaultValue: "",
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: ["findFirst", "findUnique", "create", "update", "delete"],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "";
+        },
+      },
     ],
   },
-]
+];

@@ -93,7 +93,7 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
     setLoading(false);
   }, []);
 
-  console.log({ data });
+  // console.log({ data });
 
   if (!model) {
     return (

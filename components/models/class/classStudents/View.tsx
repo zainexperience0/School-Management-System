@@ -16,11 +16,11 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ListLecturesData } from "../lecture/List";
-import { ListStudents } from "../student/List";
-import { ListClassStudents } from "./classStudents/List";
+import Image from "next/image";
+import { ListStudentsFee } from "./fee/List";
+import { ListCompletedLectures } from "./completed lectures/List";
 
-export const ViewClass = ({ modelSlug, id }: any) => {
+export const ViewStudentInClass = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -92,13 +92,13 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{data.name}</BreadcrumbPage>
+            <BreadcrumbPage>{data.student.name}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
         <p className="text-lg sm:text-xl text-muted-foreground">
-          {isoToDate(data?.createdAt)}
+          {isoToDate(data?.joinDate)}
         </p>
         <div className="flex flex-row space-x-2 mt-2 sm:mt-0">
           <Link
@@ -122,20 +122,39 @@ export const ViewClass = ({ modelSlug, id }: any) => {
       <p className="text-lg text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
-      <Tabs defaultValue="lecture" className="w-full">
+
+      <div className="text-center">
+        <Image
+          src={data?.student.image}
+          alt={data?.name}
+          width={200}
+          height={200}
+          className="rounded-full mx-auto"
+        />
+        <p className="text-sm text-muted-foreground mt-2">
+          {data?.student.email}
+        </p>
+        <p className="text-sm mt-2">Phone: {data?.student.phone}</p>
+        <p className="font-bold">{data.class.name}</p>
+      </div>
+
+      <Tabs defaultValue="fee" className="w-full">
         <TabsList className="w-full border-b border-muted">
-          <TabsTrigger value="lecture" className="flex-1 text-center py-2">
-            Lecture
+          <TabsTrigger value="fee" className="flex-1 text-center py-2">
+            Fee
           </TabsTrigger>
-          <TabsTrigger value="students" className="flex-1 text-center py-2">
-            Students
+          <TabsTrigger
+            value="lecturesCompleted"
+            className="flex-1 text-center py-2"
+          >
+           Lectures Completed
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="lecture">
-          <ListLecturesData modelSlug={"lecture"} />
+        <TabsContent value="fee">
+        <ListStudentsFee modelSlug="fee" id={data?.id} />
         </TabsContent>
-        <TabsContent value="students">
-          <ListClassStudents modelSlug={"classToStudent"} id={data.id}/>
+        <TabsContent value="lecturesCompleted">
+        <ListCompletedLectures modelSlug={"lectureCompleted"} id={data?.id}/>
         </TabsContent>
       </Tabs>
     </div>
