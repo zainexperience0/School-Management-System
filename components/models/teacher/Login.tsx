@@ -16,7 +16,14 @@ import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
 export const AdminLogin = ({ model }: any) => {
-  const [adminId, setAdminId, removeAdminId] = useLocalStorage("adminId", "");
+  const [teacherId, setTeacherId, removeTeacherId] = useLocalStorage(
+    "teacherId",
+    ""
+  );
+  const [studentId, setStudentId, removeStudentId] = useLocalStorage(
+    "studentId",
+    ""
+  );
   const [data, setData] = useState<any>({});
   const [login, setLogin] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -41,14 +48,15 @@ export const AdminLogin = ({ model }: any) => {
     }
     setLogin(true);
     axios
-      .post(`/api/v1/admin/login`, data)
+      .post(`/api/v1/teacher/login`, data)
       .then((resp: any) => {
         setLogin(false);
         setCreateSuccess(true);
-        setAdminId(resp.data.id);
+        removeStudentId();
+        setTeacherId(resp.data.id);
         setTimeout(() => {
           resetFields();
-          window.location.href = "/main/admin";
+          window.location.href = "/main/teacher";
         }, 2000);
       })
       .catch((err: any) => {

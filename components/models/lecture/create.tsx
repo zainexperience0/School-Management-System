@@ -1,5 +1,5 @@
 "use client";
-import {  prePath } from "@/lib/schemas";
+import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
@@ -14,10 +14,18 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import { generateFromEmail } from "unique-username-generator";
-import Image from "next/image";
+import MultiSelectField from "@/components/custom/FieldList/MultiSelectField";
+import SelectInputField from "@/components/custom/FieldList/SelectInputField";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
+export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
+  const [classes, setClasses] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -25,7 +33,21 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
   const [loading, setLoading] = useState(true);
 
   const [isRelational, setIsRelational] = useState(false);
-  
+
+  useEffect(() => {
+    axios
+      .get("/api/v1/dynamic/class")
+      .then((resp: any) => {
+        setClasses(resp.data);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  }, []);
+
+  // console.log(classes);
+
+  console.log({ data });
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -45,10 +67,7 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, {
-        ...data,
-        username: generateFromEmail(data.email, 6),
-      })
+      .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
         // console.log(resp);
         setCreating(false);
@@ -94,8 +113,6 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
     setLoading(false);
   }, []);
 
-  console.log({ data });
-  
   if (!model) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
@@ -148,14 +165,35 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <Image
-        src={data?.image}
-        alt={model.name}
-        width={200}
-        height={200}
-        className="mx-auto"
+      <InputWrapper
+        model={model}
+        data={data}
+        setData={setData}
+        action={"create"}
       />
-      <InputWrapper model={model} data={data} setData={setData} action={"create"} />
+      <Select
+        onValueChange={(e) =>
+          setData({
+            ...data,
+            class: {
+              connect: {
+                id: e,
+              },
+            },
+          })
+        }
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select Class" />
+        </SelectTrigger>
+        <SelectContent>
+          {classes.map((option: any) => (
+            <SelectItem key={option.id} value={option.id}>
+              {option.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       <Button
         onClick={() => {
           createRecord();

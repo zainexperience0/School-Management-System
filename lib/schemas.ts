@@ -6,14 +6,14 @@ export const searchTypes = ["email", "name", "phone", "phone"];
 
 export const allModels = [
   {
-    name: "Users",
-    model: "admin",
+    name: "Teachers",
+    model: "teacher",
     meta: {
-      title: "username",
+      title: "name",
     },
     updateField: "updatedAt",
     searchConfig: {
-      searchFields: ["username"],
+      searchFields: ["name"],
       sortBy: "desc",
       sortField: "createdAt",
     },
@@ -33,15 +33,15 @@ export const allModels = [
         }
       },
       {
-        name: "Username",
-        slug: "username",
+        name: "Qualification",
+        slug: "qualification",
         type: "textInput",
         defaultValue: "",
-        required: false,
-        dataType: "string",
+        required: true, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: ["findFirst","findUnique","create","update","delete", "findMany"],
-        frontend: ["list","view","update","delete"],
+        backend: ["findFirst","findUnique","findMany","create","update","delete"],
+        frontend: ["list","view","update","delete","create"],
         valueGetter: () => {
           return ""
         }
@@ -177,11 +177,11 @@ export const allModels = [
     name: "Student",
     model: "student",
     meta: {
-      title: "username",
+      title: "name",
     },
     updateField: "updatedAt",
     searchConfig: {
-      searchFields: ["username"],
+      searchFields: ["name"],
       sortBy: "desc",
       sortField: "createdAt",
     },
@@ -202,7 +202,7 @@ export const allModels = [
       },
       {
         name: "Reg No",
-        slug: "registrationNumber",
+        slug: "regId",
         type: "textInput",
         defaultValue: nanoid(6),
         required: true, // tells whether this field is required in UI inputs
@@ -212,34 +212,6 @@ export const allModels = [
         frontend: ["list","view","update","delete","create"],
         valueGetter: () => {
           return nanoid(6)
-        }
-      },
-      {
-        name: "Roll No",
-        slug: "rollNumber",
-        type: "textInput",
-        defaultValue: "",
-        required: true, // tells whether this field is required in UI inputs
-        dataType: "string", // Schema datatype mapping
-        customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: ["list","view","update","delete","create"],
-        valueGetter: () => {
-          return ""
-        }
-      },
-      {
-        name: "Username",
-        slug: "username",
-        type: "textInput",
-        defaultValue: "",
-        required: false,
-        dataType: "string",
-        customClassName: "",
-        backend: ["findFirst","findUnique","create","update","delete", "findMany"],
-        frontend: ["list","view","update","delete"],
-        valueGetter: () => {
-          return ""
         }
       },
       {
@@ -274,26 +246,6 @@ export const allModels = [
         frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
           return "";
-        },
-      },
-      {
-        name: "Date of Birth",
-        slug: "dob",
-        type: "dateInput",
-        defaultValue: new Date(),
-        required: false, // tells whether this field is required in UI inputs
-        dataType: "string", // Schema datatype mapping
-        customClassName: "",
-        backend: [
-          "findFirst",
-          "findUnique",
-          "create",
-          "update",
-          "delete",
-        ],
-        frontend: ["list", "view", "update", "delete", "create"],
-        valueGetter: () => {
-          return new Date();
         },
       },
       {
@@ -382,6 +334,48 @@ export const allModels = [
         },
       },
       {
+        name: "Social Links",
+        slug: "socialLinks",
+        type: "",
+        defaultValue: [],
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete"],
+        valueGetter: () => {
+          return [];
+        },
+      },
+      {
+        name: "Education",
+        slug: "education",
+        type: "markdownInput",
+        defaultValue: "",
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
         name: "Created At",
         slug: "createdAt",
         type: "",
@@ -439,15 +433,163 @@ export const allModels = [
         }
       },
       {
-        name: "Student",
-        slug: "students",
+        name: "Description",
+        slug: "descriptiton",
+        type: "markdownInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany","create","update","delete"],
+        frontend: ["list","view","update","delete","create"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Image",
+        slug: "image",
+        type: "textInput",
+        defaultValue: "https://github.com/shadcn.png",
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return "https://github.com/shadcn.png";
+        },
+      },
+      {
+        name: "Duration",
+        slug: "duration",
+        type: "numberInput",
+        defaultValue: 0,
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return 0;
+        },
+      },
+      {
+        name: "Created At",
+        slug: "createdAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany"],
+        frontend: ["list","view"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Updated At",
+        slug: "updatedAt",
+        type: "",
+        defaultValue: "",
+        required: false,
+        dataType: "time",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany"],
+        frontend: ["list","view"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+    ],
+  },
+  {
+    name: "Lecture",
+    model: "lecture",
+    meta: {
+      title: "name",
+    },
+    updateField: "updatedAt",
+    searchConfig: {
+      searchFields: ["name"],
+      sortBy: "desc",
+      sortField: "createdAt",
+    },
+    fields: [
+      {
+        name: "Name",
+        slug: "name",
+        type: "textInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany","create","update","delete"],
+        frontend: ["list","view","update","delete","create"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Content",
+        slug: "content",
+        type: "markdownInput",
+        defaultValue: "",
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: ["findFirst","findUnique","findMany","create","update","delete"],
+        frontend: ["list","view","update","delete","create"],
+        valueGetter: () => {
+          return ""
+        }
+      },
+      {
+        name: "Duration",
+        slug: "duration",
+        type: "numberInput",
+        defaultValue: 0,
+        required: false, // tells whether this field is required in UI inputs
+        dataType: "string", // Schema datatype mapping
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return 0;
+        },
+      },
+      {
+        name: "class",
+        slug: "class",
         type: "relation",
         defaultValue: "",
         required: true,
         dataType: "relation",
         customClassName: "",
-        backend: ["findFirst","findUnique","findMany","create","update","delete"],
-        frontend: [],
+        backend: ["findMany", "findUnique", "create"],
+        frontend: ["list", "view"],
         valueGetter: () => {
           return "";
         },

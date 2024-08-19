@@ -1,12 +1,10 @@
 "use client";
-import { AdminLogin } from "@/components/models/admin/Login";
+import { AdminLogin } from "@/components/models/teacher/Login";
 import { StudentLogin } from "@/components/models/student/Login";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoginSchema } from "@/lib/schemas";
 import Image from "next/image";
-import { useEffect } from "react";
-import { useReadLocalStorage } from "usehooks-ts";
 
 export default function Home() {
   // const adminId = useReadLocalStorage("adminId");

@@ -13,10 +13,18 @@ import {
 import axios from "axios";
 import { CheckCircle, Loader } from "lucide-react";
 import { useState } from "react";
-import { useLocalStorage } from "usehooks-ts";
+import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 
 export const StudentLogin = ({ model }: any) => {
-  const [adminId, setAdminId, removeAdminId] = useLocalStorage("adminId", "");
+  const [teacherId, setTeacherId, removeTeacherId] = useLocalStorage(
+    "teacherId",
+    ""
+  );
+  const [studentId, setStudentId, removeStudentId] = useLocalStorage(
+    "studentId",
+    ""
+  );
+  
   const [data, setData] = useState<any>({});
   const [login, setLogin] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -45,10 +53,11 @@ export const StudentLogin = ({ model }: any) => {
       .then((resp: any) => {
         setLogin(false);
         setCreateSuccess(true);
-        setAdminId(resp.data.id);
+        removeTeacherId();
+        setStudentId(resp.data.id);
         setTimeout(() => {
           resetFields();
-          window.location.href = "/main/admin";
+          window.location.href = "/main/student";
         }, 2000);
       })
       .catch((err: any) => {
@@ -86,7 +95,7 @@ export const StudentLogin = ({ model }: any) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>ADMIN ACCOUNT</CardTitle>
+        <CardTitle>STUDENT ACCOUNT</CardTitle>
         <CardDescription>Provide admin account details</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">

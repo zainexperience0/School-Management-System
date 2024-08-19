@@ -1,66 +1,82 @@
 "use client";
-import { RegisterAdmin } from "@/components/models/admin/Create";
-import { ListUsers } from "@/components/models/admin/List";
-import { ListClasses } from "@/components/models/class/List";
+
+import { RegisterAdmin } from "@/components/models/teacher/Create";
+import { AdminPanel } from "@/components/models/teacher/List";
 import { ViewClass } from "@/components/models/class/View";
 import { CreateField } from "@/components/models/createField";
 import { DeleteField } from "@/components/models/DeleteField";
 import { EditField } from "@/components/models/EditField";
 import { ViewField } from "@/components/models/viewField";
 import { allModels } from "@/lib/schemas";
+import { CreateLecture } from "@/components/models/lecture/create";
 
 const DynamicPage = ({ params, searchParams }: any) => {
-  const dynamicParamaters = params.fields;
-  const model = dynamicParamaters[0];
-  const action = dynamicParamaters[1];
-  const fieldId = dynamicParamaters[2];
+  const dynamicParameters = params.fields;
+  const model = dynamicParameters[0];
+  const action = dynamicParameters[1];
+  const fieldId = dynamicParameters[2];
 
-  const deletefieldKey = searchParams?.deletekey;
+  const deleteFieldKey = searchParams?.deletekey;
 
-  // Render only the ViewClass component if the action is "view" and the model is "class"
   if (action === "view" && model === "class") {
-    return (
-      <ViewClass
-        modelSlug={model}
-        id={fieldId}
-      />
-    );
+    return <ViewClass modelSlug={model} id={fieldId} />;
   }
 
   if (fieldId && !["edit", "delete"].includes(action)) {
     return <ViewField modelSlug={model} id={fieldId} />;
-  } else if (action) {
-    return (
-      <div>
-        {action === "create" && model !== "admin" && (
-          <CreateField
-            model={allModels.find((m) => m.model === model)}
-            page={true}
-          />
-        )}
-        {action === "create" && model === "admin" && (
-          <RegisterAdmin
-            model={allModels.find((m) => m.model === model)}
-            page={true}
-          />
-        )}
-        {action === "edit" && (
+  }
+
+  if (action) {
+    switch (action) {
+      case "create":
+        if (model === "admin") {
+          return (
+            <RegisterAdmin
+              model={allModels.find((m) => m.model === model)}
+              page={true}
+            />
+          );
+        } else if (model === "lecture") {
+          return (
+            <CreateLecture
+              model={allModels.find((m) => m.model === model)}
+              page={true}
+            />
+          );
+        } else if (model && !["admin", "teacher"].includes(model)) {
+          return (
+            <CreateField
+              model={allModels.find((m) => m.model === model)}
+              page={true}
+            />
+          );
+        }
+        break;
+
+      case "edit":
+        return (
           <EditField
             model={allModels.find((m) => m.model === model)}
             id={fieldId}
           />
-        )}
-        {action === "delete" && (
-          <DeleteField modelSlug={model} id={fieldId} field={deletefieldKey} />
-        )}
-      </div>
-    );
-  } else if (model) {
-    return (
-      <div>
-        {model === "admin" && <ListUsers modelSlug={model} />}
-      </div>
-    );
+        );
+
+      case "delete":
+        return (
+          <DeleteField
+            modelSlug={model}
+            id={fieldId}
+            field={deleteFieldKey}
+          />
+        );
+
+      default:
+        return null;
+    }
+  }
+
+  if (model === "teacher") {
+    return <AdminPanel modelSlug={model} />;
   }
 
   return null; // Fallback if no conditions are met

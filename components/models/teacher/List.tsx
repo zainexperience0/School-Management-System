@@ -2,25 +2,45 @@
 import React, { Fragment, useEffect, useState } from "react";
 import {
   Card,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { allModels, prePath } from "@/lib/schemas";
 import Link from "next/link";
-import { Loader, MoveRight, Pencil, Plus, Trash } from "lucide-react";
+import { Loader, LogOut, MoveRight, Pencil, Plus, Trash } from "lucide-react";
 import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-export const ListClasses = ({ modelSlug }: any) => {
+import { ListClasses } from "../class/List";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
+import { useLocalStorage } from "usehooks-ts";
+
+export const AdminPanel = ({ modelSlug }: any) => {
+  const [teacherId, setTeacherId, removeTeacherId] = useLocalStorage(
+    "teacherId",
+    ""
+  );
+  const [studentId, setStudentId, removeStudentId] = useLocalStorage(
+    "studentId",
+    ""
+  );
+
+  const logout = () => {
+    removeTeacherId();
+    removeStudentId();
+    location.href = "/";
+  };
+
+  useAdminCheck();
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&sortfield=${
       allModels.find((model) => model.model === modelSlug)?.searchConfig
         ?.sortField
     }`
   );
-
   const { data, isLoading, isFailed, isEnd } = useInfiniteQuery({
     modelSlug,
     searchQuery,
@@ -86,6 +106,9 @@ export const ListClasses = ({ modelSlug }: any) => {
             {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
+          <Button variant="destructive" size="sm" onClick={logout}>
+            <LogOut className="h-5 w-5" />
+          </Button>
           <Link
             href={`/${prePath}/${modelSlug}/create`}
             className={buttonVariants({ variant: "default", size: "sm" })}
@@ -120,6 +143,9 @@ export const ListClasses = ({ modelSlug }: any) => {
                     </div>
                     <MoveRight className=" opacity-75" />
                   </CardTitle>
+                  <CardDescription className="line-clamp-3 ">
+                    Phone: {item.phone}
+                  </CardDescription>
                   <div className="flex flex-row space-x-4 items-center">
                     <p className="text-sm text-muted-foreground ">
                       {isoToDate(item?.createdAt)}
@@ -155,11 +181,10 @@ export const ListClasses = ({ modelSlug }: any) => {
           </Fragment>
         ))}
         <div>
-
+          <ListClasses modelSlug={"class"} />
         </div>
       </div>
 
-     
       <div className="mb-10">
         {isLoading && (
           <div className="flex justify-center">

@@ -144,7 +144,7 @@ export async function POST(req: NextRequest, params: any) {
       return { slug: field.slug, value: data_0[field.slug] };
     });
 
-  console.log(JSON.stringify(createFields));
+  // console.log(JSON.stringify(createFields));
 
   if (createFields.filter((v: any) => v.value === undefined)?.length !== 0) {
     return NextResponse.json(
@@ -158,7 +158,9 @@ export async function POST(req: NextRequest, params: any) {
     );
   }
 
-  console.log(JSON.stringify(data_2));
+  // console.log(JSON.stringify(data_0) );
+  
+  // console.log(JSON.stringify(data_2));
 
   //@ts-ignore
   const data = await prismaInstance[model_name].create({ data: data_2 });

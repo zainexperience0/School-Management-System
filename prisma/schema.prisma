@@ -21,7 +21,7 @@ datasource db {
 // students have class
 
 // ------------------------------------------ Normal models fo normal data managements
-model Teacher {
+model Teacher {  //done
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   email         String
@@ -34,16 +34,17 @@ model Teacher {
   updatedAt     DateTime @updatedAt
 }
 
-model Student {
+model Student {   //done
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   regId       String
   name        String
   email       String
   password    String
   phone       String
+  gender      String
   address     String
   image       String
-  socialLinks String[]
+  socialLinks String[]    //to do
   education   String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -52,7 +53,7 @@ model Student {
   classes ClassToStudent[]
 }
 
-model Class {
+model Class {   //done
   id           String           @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   descriptiton String
@@ -64,7 +65,7 @@ model Class {
   students     ClassToStudent[]
 }
 
-model Lecture {
+model Lecture {  //done
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   class     Class    @relation(fields: [classId], references: [id])
   classId   String   @unique @db.ObjectId

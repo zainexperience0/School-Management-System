@@ -7,7 +7,7 @@ export async function POST(req: any, res: any) {
     const { email, password } = body;
 
     // Fetch the user with matching email and password
-    const user = await prismaInstance.admin.findFirst({
+    const user = await prismaInstance.teacher.findFirst({
       where: {
         email,
         password,
