@@ -15,14 +15,26 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { isoToDate } from "@/lib/utils";
 
 export const TaskCompleteCreate = ({
   model,
   callbackFn,
   relation,
   page,
-  id,
+  lectureCompletedId,
 }: any) => {
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
@@ -30,6 +42,7 @@ export const TaskCompleteCreate = ({
   const [createFail, setCreateFail] = useState(false);
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
+  const [lectureCompleted, setLectureCompleted] = useState([]);
 
   const [isRelational, setIsRelational] = useState(false);
 
@@ -46,7 +59,31 @@ export const TaskCompleteCreate = ({
       });
   }, []);
 
-  //  console.log({tasks});
+  useEffect(() => {
+    axios
+      .get("/api/v1/dynamic/lectureCompleted")
+      .then((res: any) => {
+        setLectureCompleted(res.data);
+        setLoading(false);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (lectureCompletedId) {
+      setData((prevData: any) => ({
+        ...prevData,
+        lecture: {
+          connect: {
+            id: lectureCompletedId,
+          },
+        },
+      }));
+    }
+  }, [lectureCompletedId]);
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -66,10 +103,7 @@ export const TaskCompleteCreate = ({
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, {
-        ...data,
-        lectureCompleted: { connect: { id: id } },
-      })
+      .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
         setCreating(false);
         setCreateSuccess(true);
@@ -165,29 +199,78 @@ export const TaskCompleteCreate = ({
           </BreadcrumbList>
         </Breadcrumb>
       )}
-    <Select
-          onValueChange={(e) =>
-            setData({
-              ...data,
-              Task: {
-                connect: {
-                  id: e,
-                },
-              },
-            })
-          }
-        >
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Select Task" />
-          </SelectTrigger>
-          <SelectContent>
-            {tasks.map((option: any) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="mt-10">
+        <Popover>
+          <PopoverTrigger className="w-full">
+            <Command className="w-full">
+              <CommandInput
+                placeholder="Type a class or search..."
+                className="rounded-t-lg"
+              />
+              <PopoverContent className="max-h-60 w-full overflow-auto">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandList>
+                  {tasks.map((option: any) => (
+                    <CommandItem
+                      key={option.id}
+                      value={option.id}
+                      defaultValue={lectureCompletedId}
+                      onSelect={() => {
+                        setData({
+                          ...data,
+                          Task: {
+                            connect: {
+                              id: option.id,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {option.name}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </PopoverContent>
+            </Command>
+          </PopoverTrigger>
+        </Popover>
+      </div>
+      <div className="mt-10">
+        <Popover>
+          <PopoverTrigger className="w-full">
+            <Command className="w-full">
+              <CommandInput
+                placeholder="Type a class or search..."
+                className="rounded-t-lg"
+              />
+              <PopoverContent className="max-h-60 w-full overflow-auto">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandList>
+                  {lectureCompleted.map((option: any) => (
+                    <CommandItem
+                      key={option.id}
+                      defaultValue={option.id}
+                      value={option.id}
+                      onSelect={() => {
+                        setData({
+                          ...data,
+                          lectureCompleted: {
+                            connect: {
+                              id: option.id,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {isoToDate(option.createdAt)}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </PopoverContent>
+            </Command>
+          </PopoverTrigger>
+        </Popover>
+      </div>
       <InputWrapper
         model={model}
         data={data}

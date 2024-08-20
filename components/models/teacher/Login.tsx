@@ -56,7 +56,7 @@ export const AdminLogin = ({ model }: any) => {
         setTeacherId(resp.data.id);
         setTimeout(() => {
           resetFields();
-          window.location.href = "/main/teacher";
+          window.location.href = "/main";
         }, 2000);
       })
       .catch((err: any) => {

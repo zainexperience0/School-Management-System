@@ -14,7 +14,6 @@ import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ListClasses } from "../class/List";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
 import { useLocalStorage } from "usehooks-ts";
 
@@ -176,9 +175,6 @@ export const AdminPanel = ({ modelSlug }: any) => {
             </Card>
           </Fragment>
         ))}
-        <div>
-          <ListClasses modelSlug={"class"} />
-        </div>
       </div>
 
       <div className="mb-10">

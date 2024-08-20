@@ -9,6 +9,7 @@ export const useMainData = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [lecturesCompleted, setLecturesCompleted] = useState<any[]>([]);
   const [tasksCompleted, setTasksCompleted] = useState<any[]>([]);
+  const [fees, setFees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,6 +25,7 @@ export const useMainData = () => {
           tasksResp,
           lecturesCompletedResp,
           tasksCompletedResp,
+          feesResp,
         ] = await Promise.all([
           axios.get("/api/v1/dynamic/student"),
           axios.get("/api/v1/dynamic/teacher"),
@@ -32,6 +34,7 @@ export const useMainData = () => {
           axios.get("/api/v1/dynamic/task"),
           axios.get("/api/v1/dynamic/lectureCompleted"),
           axios.get("/api/v1/dynamic/taskCompleted"),
+          axios.get("/api/v1/dynamic/fee"),
         ]);
 
         setStudents(studentsResp.data);
@@ -41,6 +44,7 @@ export const useMainData = () => {
         setTasks(tasksResp.data);
         setLecturesCompleted(lecturesCompletedResp.data);
         setTasksCompleted(tasksCompletedResp.data);
+        setFees(feesResp.data);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch data.");
@@ -62,5 +66,6 @@ export const useMainData = () => {
     tasksCompleted,
     loading,
     error,
+    fees,
   };
 };

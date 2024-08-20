@@ -15,11 +15,8 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ListTasks } from "../tasks/List";
-import { ListCompletedTasks } from "../class/classStudents/completed lectures/taskCompleted/List";
 
-export const ViewLecture = ({ modelSlug, id }: any) => {
+export const ViewTaskCompleted = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -28,7 +25,7 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
   useEffect(() => {
     setModel(allModels.find((model: any) => model.model === modelSlug));
     fetchData();
-  }, [modelSlug, id]);
+  }, []);
 
   const fetchData = () => {
     axios
@@ -62,7 +59,7 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
 
   if (!data?.id) {
     return (
-      <div className="mt-10 max-w-5xl mx-auto text-center">
+      <div className="mt-10 max-w-5xl mx-auto text-center ">
         <div className="flex flex-row space-x-2 items-center justify-center">
           <Info className="h-8 w-8 text-muted-foreground" />
           <p className="text-2xl text-muted-foreground">
@@ -91,15 +88,15 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{data.name}</BreadcrumbPage>
+            <BreadcrumbPage>{data.title}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <p className="text-lg sm:text-xl text-muted-foreground">
+      <div className="flex flex-row justify-between items-center">
+        <p className="text-xl text-muted-foreground">
           {isoToDate(data?.createdAt)}
         </p>
-        <div className="flex flex-row space-x-2 mt-2 sm:mt-0">
+        <div className="flex flex-row items-center justify-end space-x-2">
           <Link
             href={`/${prePath}/${modelSlug}/edit/${data.id}`}
             className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
@@ -116,30 +113,21 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
           </Link>
         </div>
       </div>
-      <p className="text-4xl sm:text-5xl font-semibold mb-2">{data.name}</p>
-      <Separator className="my-4" />
-      <p className="text-lg text-muted-foreground mb-10">
-        Updated {timeAgo(data?.updatedAt)}
-      </p>
-      <Tabs defaultValue="tasks" className="w-full">
-        <TabsList className="w-full border-b border-muted">
-          <TabsTrigger value="tasks" className="flex-1 text-center py-2">
-            Tasks
-          </TabsTrigger>
-          <TabsTrigger
-            value="taskCompleted"
-            className="flex-1 text-center py-2"
-          >
-            TasksCompleted
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="tasks">
-          <ListTasks modelSlug={"task"} lecture_id={data.id} />
-        </TabsContent>
-        <TabsContent value="taskCompleted">
-          <ListCompletedTasks modelSlug={"taskCompleted"} />
-        </TabsContent>
-      </Tabs>
+      <p className="text-5xl font-semibold ">{data.title}</p>
+
+      <Separator className="h-1 w-full my-2" />
+      <div className="flex flex-row justify-between  mb-10">
+        <div className="flex flex-row flex-wrap">
+          {data?.tags?.map((tag: any) => (
+            <p key={tag} className="text-lg text-muted-foreground mr-2">
+              #{tag[0] === " " ? tag.slice(1) : tag}
+            </p>
+          ))}
+        </div>
+        <p className="text-lg text-muted-foreground whitespace-nowrap">
+          Updated {timeAgo(data?.updatedAt)}
+        </p>
+      </div>
     </div>
   );
 };

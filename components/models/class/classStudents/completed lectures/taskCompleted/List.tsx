@@ -15,7 +15,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "@/components/models/FilterTools";
 export const ListCompletedTasks = ({ modelSlug, id }: any) => {
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&sortfield=${
+    `&sortby=desc&${
+      id ? `eq=true&fields=lectureCompletedId&lectureCompletedId=${id}` : ""
+    }&sortfield=${
       allModels.find((model) => model.model === modelSlug)?.searchConfig
         ?.sortField
     }`
@@ -86,7 +88,7 @@ export const ListCompletedTasks = ({ modelSlug, id }: any) => {
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
           <Link
-            href={`/${prePath}/${modelSlug}/create?lectureCompleted=${id}`}
+            href={`/${prePath}/${modelSlug}/create${id ? `?lectureCompleted=${id}` : ""}`}
             className={buttonVariants({ variant: "default", size: "sm" })}
           >
             <Plus className="h-5 w-5" />

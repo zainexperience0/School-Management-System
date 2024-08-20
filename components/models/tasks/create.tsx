@@ -2,7 +2,7 @@
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle, Loader } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,7 +14,18 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 export const CreateTasks = ({
   model,
@@ -45,7 +56,6 @@ export const CreateTasks = ({
       });
   }, []);
 
-
   useEffect(() => {
     if (lecture_id) {
       setData((prevData: any) => ({
@@ -58,7 +68,7 @@ export const CreateTasks = ({
       }));
     }
   }, [lecture_id]);
-  
+
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
 
@@ -159,7 +169,7 @@ export const CreateTasks = ({
   }
 
   return (
-    <div className="max-w-5xl mx-auto my-10 px-2">
+    <div className="max-w-5xl mx-auto my-10 px-4 sm:px-6 lg:px-8">
       {page && (
         <Breadcrumb className="mb-5">
           <BreadcrumbList>
@@ -181,34 +191,44 @@ export const CreateTasks = ({
         setData={setData}
         action={"create"}
       />
-       <div className="flex justify-between items-center">
-        <h1>Select Lecture</h1>
-      <Select
-      defaultValue={lecture_id}
-       onValueChange={(e) =>
-         setData({
-           ...data,
-           lecture: {
-             connect: {
-               id: e || lecture_id,
-             },
-           },
-         })
-       }
-     >
-       <SelectTrigger className="w-[180px]">
-         <SelectValue placeholder="Select Lecture" />
-       </SelectTrigger>
-       <SelectContent>
-         {lectures.map((option: any) => (
-           <SelectItem key={option.id} value={option.id}>
-             {option.name}
-           </SelectItem>
-         ))}
-       </SelectContent>
-     </Select>
+      <div className="mt-10">
+        <Popover>
+          <PopoverTrigger className="w-full">
+            <Command className="w-full">
+              <CommandInput
+                placeholder="Type a class or search..."
+                className="rounded-t-lg"
+              />
+              <PopoverContent className="max-h-60 w-full overflow-auto">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandList>
+                  {lectures.map((option: any) => (
+                    <CommandItem
+                      key={option.id}
+                      value={option.id}
+                      defaultValue={lecture_id}
+                      onSelect={() => {
+                        setData({
+                          ...data,
+                          lecture: {
+                            connect: {
+                              id: option.id,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {option.name}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </PopoverContent>
+            </Command>
+          </PopoverTrigger>
+        </Popover>
       </div>
       <Button
+        className="mt-4 w-full sm:w-auto"
         onClick={() => {
           createRecord();
         }}

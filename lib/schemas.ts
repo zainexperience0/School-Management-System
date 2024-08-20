@@ -766,7 +766,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
+        backend: ["findMany", "create"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
@@ -780,7 +780,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
+        backend: ["findMany", "create"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
@@ -900,7 +900,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
+        backend: ["findMany", "create"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
@@ -1028,7 +1028,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
+        backend: ["findMany", "create"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
@@ -1170,7 +1170,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
+        backend: ["findMany", "create"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
@@ -1227,7 +1227,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
+        backend: ["findMany", "create"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
@@ -1241,7 +1241,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
+        backend: ["findMany", "create"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";

@@ -25,6 +25,7 @@ const MainPage = () => {
     tasksCompleted,
     loading,
     error,
+    fees
   } = useMainData();
   const teacherId: any = useTeacherId();
 
@@ -201,6 +202,28 @@ const MainPage = () => {
               <Button
                 variant="outline"
                 onClick={() => (window.location.href = "/main/taskCompleted")}
+              >
+                Visit
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+{/** Fee Section */}
+        <Card className="rounded-lg">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-2xl sm:text-3xl lg:text-4xl">
+              Fee
+            </CardTitle>
+            <CardDescription>Track Fees</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-semibold">
+                {fees.length}
+              </h1>
+              <Button
+                variant="outline"
+                onClick={() => (window.location.href = "/main/fee")}
               >
                 Visit
               </Button>

@@ -15,11 +15,9 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ListTasks } from "../tasks/List";
-import { ListCompletedTasks } from "../class/classStudents/completed lectures/taskCompleted/List";
+import Image from "next/image";
 
-export const ViewLecture = ({ modelSlug, id }: any) => {
+export const ViewStudent = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -28,7 +26,7 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
   useEffect(() => {
     setModel(allModels.find((model: any) => model.model === modelSlug));
     fetchData();
-  }, [modelSlug, id]);
+  }, []);
 
   const fetchData = () => {
     axios
@@ -62,7 +60,7 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
 
   if (!data?.id) {
     return (
-      <div className="mt-10 max-w-5xl mx-auto text-center">
+      <div className="mt-10 max-w-5xl mx-auto text-center ">
         <div className="flex flex-row space-x-2 items-center justify-center">
           <Info className="h-8 w-8 text-muted-foreground" />
           <p className="text-2xl text-muted-foreground">
@@ -121,25 +119,19 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
       <p className="text-lg text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
-      <Tabs defaultValue="tasks" className="w-full">
-        <TabsList className="w-full border-b border-muted">
-          <TabsTrigger value="tasks" className="flex-1 text-center py-2">
-            Tasks
-          </TabsTrigger>
-          <TabsTrigger
-            value="taskCompleted"
-            className="flex-1 text-center py-2"
-          >
-            TasksCompleted
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="tasks">
-          <ListTasks modelSlug={"task"} lecture_id={data.id} />
-        </TabsContent>
-        <TabsContent value="taskCompleted">
-          <ListCompletedTasks modelSlug={"taskCompleted"} />
-        </TabsContent>
-      </Tabs>
+
+      <div className="text-center">
+        <Image
+          src={data?.image}
+          alt={data?.name}
+          width={200}
+          height={200}
+          className="rounded-full mx-auto"
+        />
+        <p className="text-sm text-muted-foreground mt-2">{data?.email}</p>
+        <p className="text-sm mt-2">Phone: {data?.phone}</p>
+        <p className="font-bold">{data.name}</p>
+      </div>
     </div>
   );
 };

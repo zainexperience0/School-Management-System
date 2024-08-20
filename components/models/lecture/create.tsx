@@ -213,12 +213,6 @@ export const CreateLecture = ({
                         });
                       }}
                     >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          option.id === classId ? "opacity-100" : "opacity-0"
-                        )}
-                      />
                       {option.name}
                     </CommandItem>
                   ))}

@@ -9,7 +9,7 @@ import {
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle, Loader } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,6 +21,18 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 export const LectureCompleteCreate = ({
   model,
@@ -51,6 +63,9 @@ export const LectureCompleteCreate = ({
         setLoading(false);
       });
   }, []);
+
+  console.log({students});
+  
 
   useEffect(() => {
     if (student_id) {
@@ -181,31 +196,42 @@ export const LectureCompleteCreate = ({
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Select
-          defaultValue={student_id} // Set the default value to the passed id
-          onValueChange={(e) =>
-            setData({
-              ...data,
-              classToStudent: {
-                connect: {
-                  id: e || student_id, // Fallback to id if e is not provided
-                },
-              },
-            })
-          }
-        >
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Select Student" />
-          </SelectTrigger>
-          <SelectContent>
-            {students.map((option: any) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.student.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+       <div className="mt-10">
+        <Popover>
+          <PopoverTrigger className="w-full">
+            <Command className="w-full">
+              <CommandInput
+                placeholder="Type a class or search..."
+                className="rounded-t-lg"
+              />
+              <PopoverContent className="max-h-60 w-full overflow-auto">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandList>
+                  {students.map((option: any) => (
+                    <CommandItem
+                    className="w-full"
+                      key={option.id}
+                      value={option.id}
+                      defaultValue={student_id}
+                      onSelect={() => {
+                        setData({
+                          ...data,
+                          classToStudent: {
+                            connect: {
+                              id: option.id,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {option.student.name}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </PopoverContent>
+            </Command>
+          </PopoverTrigger>
+        </Popover>
       </div>
       <InputWrapper
         model={model}
