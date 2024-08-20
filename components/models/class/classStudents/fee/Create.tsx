@@ -23,17 +23,64 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const FeeCreate = ({ model, callbackFn, relation, page, id }: any) => {
+export const FeeCreate = ({
+  model,
+  callbackFn,
+  relation,
+  page,
+  student_id,
+}: any) => {
+  const [students, setStudents] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
   const [createFail, setCreateFail] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const [isRelational, setIsRelational] = useState(false);
 
-  // console.log({data});
-  
+  useEffect(() => {
+    axios
+      .get("/api/v1/dynamic/classToStudent")
+      .then((resp: any) => {
+        setStudents(resp.data);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (student_id) {
+      setData((prevData: any) => ({
+        ...prevData,
+        classToStudent: {
+          connect: {
+            id: student_id,
+          },
+        },
+      }));
+    }
+  }, [student_id]);
+
+  useEffect(() => {
+    if (!relation) {
+      setLoading(false);
+      return;
+    }
+    const schemaRelationalFields = model.fields
+      ?.filter((field: any) => field?.type === "relation")
+      ?.map((field: any) => field?.slug);
+    const propRelationalFields = Object.keys(relation);
+    const isRelationalField = schemaRelationalFields?.some(
+      (field: any) => !propRelationalFields?.includes(field)
+    );
+    setIsRelational(!!isRelationalField);
+
+    setLoading(false);
+  }, [relation, model.fields]);
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -53,10 +100,7 @@ export const FeeCreate = ({ model, callbackFn, relation, page, id }: any) => {
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, {
-        ...data,
-        classToStudent: { connect: { id: id}}
-      })
+      .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
         setCreating(false);
         setCreateSuccess(true);
@@ -82,23 +126,6 @@ export const FeeCreate = ({ model, callbackFn, relation, page, id }: any) => {
     setCreateFail(false);
     setData({ ...relation });
   };
-
-  useEffect(() => {
-    if (!relation) {
-      setLoading(false);
-      return;
-    }
-    const schemaRelationalFields = model.fields
-      ?.filter((field: any) => field?.type === "relation")
-      ?.map((field: any) => field?.slug);
-    const propRelationalFields = Object.keys(relation);
-    const isRelationalField = schemaRelationalFields?.some(
-      (field: any) => !propRelationalFields?.includes(field)
-    );
-    setIsRelational(!!isRelationalField);
-
-    setLoading(false);
-  }, []);
 
   if (!model) {
     return (
@@ -152,12 +179,39 @@ export const FeeCreate = ({ model, callbackFn, relation, page, id }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Select
+          defaultValue={student_id} // Set the default value to the passed id
+          onValueChange={(e) =>
+            setData({
+              ...data,
+              classToStudent: {
+                connect: {
+                  id: e || student_id, // Fallback to id if e is not provided
+                },
+              },
+            })
+          }
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select Student" />
+          </SelectTrigger>
+          <SelectContent>
+            {students.map((option: any) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.student.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <InputWrapper
         model={model}
         data={data}
         setData={setData}
         action={"create"}
       />
+
       <Button
         onClick={() => createRecord()}
         disabled={creating || createSuccess || createFail}

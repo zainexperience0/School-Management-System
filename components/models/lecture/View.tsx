@@ -130,7 +130,7 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="tasks">
-          <ListTasks modelSlug={"task"} id={data.id} />
+          <ListTasks modelSlug={"task"} lecture_id={data.id} />
         </TabsContent>
         <TabsContent value="students"></TabsContent>
       </Tabs>

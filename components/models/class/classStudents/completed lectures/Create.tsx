@@ -1,5 +1,11 @@
 "use client";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -21,8 +27,9 @@ export const LectureCompleteCreate = ({
   callbackFn,
   relation,
   page,
-  id,
+  student_id,
 }: any) => {
+  const [students, setStudents] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -30,6 +37,33 @@ export const LectureCompleteCreate = ({
   const [loading, setLoading] = useState(true);
 
   const [isRelational, setIsRelational] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("/api/v1/dynamic/classToStudent")
+      .then((resp: any) => {
+        setStudents(resp.data);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (student_id) {
+      setData((prevData: any) => ({
+        ...prevData,
+        classToStudent: {
+          connect: {
+            id: student_id,
+          },
+        },
+      }));
+    }
+  }, [student_id]);
 
   // console.log({data});
 
@@ -51,10 +85,7 @@ export const LectureCompleteCreate = ({
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, {
-        ...data,
-        classToStudent: { connect: { id: id } },
-      })
+      .post(`/api/v1/dynamic/${model.model}`,data)
       .then((resp: any) => {
         setCreating(false);
         setCreateSuccess(true);
@@ -150,6 +181,32 @@ export const LectureCompleteCreate = ({
           </BreadcrumbList>
         </Breadcrumb>
       )}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Select
+          defaultValue={student_id} // Set the default value to the passed id
+          onValueChange={(e) =>
+            setData({
+              ...data,
+              classToStudent: {
+                connect: {
+                  id: e || student_id, // Fallback to id if e is not provided
+                },
+              },
+            })
+          }
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select Student" />
+          </SelectTrigger>
+          <SelectContent>
+            {students.map((option: any) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.student.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <InputWrapper
         model={model}
         data={data}

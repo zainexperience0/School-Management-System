@@ -51,8 +51,6 @@ export const AdminPanel = ({ modelSlug }: any) => {
   useEffect(() => {
     console.log();
     setModel(allModels.find((model) => model.model === modelSlug));
-    // const schema =  model.fields.filter((field: any) => field.frontend.includes("findMany"));
-    // console.log(schema);
 
     const fields = model.searchConfig?.searchFields;
     const sortField = model.searchConfig?.sortField;
@@ -102,8 +100,6 @@ export const AdminPanel = ({ modelSlug }: any) => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center space-x-4">
             <p className="text-5xl  font-semibold capitalize">{model.name}</p>
-            {/* build search query in url for next pages also */}
-            {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
           <Button variant="destructive" size="sm" onClick={logout}>

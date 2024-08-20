@@ -1,5 +1,5 @@
 "use client";
-import {  prePath } from "@/lib/schemas";
+import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
@@ -14,8 +14,14 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export const CreateClass = ({ model, callbackFn, relation, page }: any) => {
+export const CreateClass = ({
+  model,
+  callbackFn,
+  relation,
+  page,
+}: any) => {
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -23,6 +29,7 @@ export const CreateClass = ({ model, callbackFn, relation, page }: any) => {
   const [loading, setLoading] = useState(true);
 
   const [isRelational, setIsRelational] = useState(false);
+  
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -140,7 +147,12 @@ export const CreateClass = ({ model, callbackFn, relation, page }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <InputWrapper model={model} data={data} setData={setData} action={"create"} />
+      <InputWrapper
+        model={model}
+        data={data}
+        setData={setData}
+        action={"create"}
+      />
       <Button
         onClick={() => {
           createRecord();

@@ -13,9 +13,11 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
 import { buttonVariants } from "@/components/ui/button";
-export const ListLecturesData = ({ modelSlug }: any) => {
+export const ListLecturesData = ({ modelSlug, id }: any) => {
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&sortfield=${
+    `&sortby=desc&${
+      id ? `eq=true&fields=classId&classId=${id}` : ""
+    }&sortfield=${
       allModels.find((model) => model.model === modelSlug)?.searchConfig
         ?.sortField
     }`
@@ -29,10 +31,7 @@ export const ListLecturesData = ({ modelSlug }: any) => {
   const [model, setModel] = useState<any>({});
 
   useEffect(() => {
-    console.log();
     setModel(allModels.find((model) => model.model === modelSlug));
-    // const schema =  model.fields.filter((field: any) => field.frontend.includes("findMany"));
-    // console.log(schema);
 
     const fields = model.searchConfig?.searchFields;
     const sortField = model.searchConfig?.sortField;
@@ -87,7 +86,9 @@ export const ListLecturesData = ({ modelSlug }: any) => {
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
           <Link
-            href={`/${prePath}/${modelSlug}/create`}
+            href={`/${prePath}/${modelSlug}/create${
+              id ? `?classId=${id}` : ""
+            }`}
             className={buttonVariants({ variant: "default", size: "sm" })}
           >
             <Plus className="h-5 w-5" />

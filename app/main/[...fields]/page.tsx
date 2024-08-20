@@ -19,6 +19,8 @@ import { FeeCreate } from "@/components/models/class/classStudents/fee/Create";
 import { LectureCompleteCreate } from "@/components/models/class/classStudents/completed lectures/Create";
 import { ViewLectureCompleted } from "@/components/models/class/classStudents/completed lectures/View";
 import { TaskCompleteCreate } from "@/components/models/class/classStudents/completed lectures/taskCompleted/Create";
+import { TeacherEdit } from "@/components/models/teacher/Edit";
+import { ClassEdit } from "@/components/models/class/Edit";
 
 const DynamicPage = ({ params, searchParams }: any) => {
   const dynamicParameters = params.fields || [];
@@ -60,6 +62,7 @@ const DynamicPage = ({ params, searchParams }: any) => {
         case "lecture":
           return (
             <CreateLecture
+            classId={searchParams?.classId}
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
@@ -90,7 +93,7 @@ const DynamicPage = ({ params, searchParams }: any) => {
         case "task":
           return (
             <CreateTasks
-              id={searchParams?.lectureId}
+            lecture_id={searchParams?.lectureId}
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
@@ -98,7 +101,7 @@ const DynamicPage = ({ params, searchParams }: any) => {
           case "lectureCompleted":
             return (
               <LectureCompleteCreate
-                id={searchParams?.student_id}
+              student_id={searchParams?.student_id}
                 model={allModels.find((m) => m.model === model)}
                 page={true}
               />
@@ -106,6 +109,7 @@ const DynamicPage = ({ params, searchParams }: any) => {
         case "class":
           return (
             <CreateClass
+            classId={searchParams?.classId}
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
@@ -113,7 +117,7 @@ const DynamicPage = ({ params, searchParams }: any) => {
         case "fee":
           return (
             <FeeCreate
-              id={searchParams?.student_id}
+            student_id={searchParams?.student_id}
               model={allModels.find((m) => m.model === model)}
               page={true}
             />
@@ -135,12 +139,22 @@ const DynamicPage = ({ params, searchParams }: any) => {
       break;
 
     case "edit":
-      return (
-        <EditField
-          model={allModels.find((m) => m.model === model)}
-          id={fieldId}
-        />
-      );
+      switch (model) {
+        case "teacher": 
+        return (
+          <TeacherEdit
+            model={allModels.find((m) => m.model === model)}
+            id={fieldId}
+            />
+        )
+        case "class": 
+        return (
+          <ClassEdit
+            model={allModels.find((m) => m.model === model)}
+            id={fieldId}
+            />
+        )
+      }
 
     case "delete":
       return (

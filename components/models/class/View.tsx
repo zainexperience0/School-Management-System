@@ -17,7 +17,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListLecturesData } from "../lecture/List";
-import { ListStudents } from "../student/List";
 import { ListClassStudents } from "./classStudents/List";
 
 export const ViewClass = ({ modelSlug, id }: any) => {
@@ -132,7 +131,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="lecture">
-          <ListLecturesData modelSlug={"lecture"} />
+          <ListLecturesData modelSlug={"lecture"} id={data.id}/>
         </TabsContent>
         <TabsContent value="students">
           <ListClassStudents modelSlug={"classToStudent"} id={data.id}/>

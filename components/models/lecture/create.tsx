@@ -2,7 +2,7 @@
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle, Loader } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,21 +15,32 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
-export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
+export const CreateLecture = ({
+  model,
+  callbackFn,
+  relation,
+  page,
+  classId,
+}: any) => {
   const [classes, setClasses] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
   const [createFail, setCreateFail] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const [isRelational, setIsRelational] = useState(false);
 
   useEffect(() => {
@@ -43,9 +54,18 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
       });
   }, []);
 
-  // console.log(classes);
-
-  // console.log({ data });
+  useEffect(() => {
+    if (classId) {
+      setData((prevData: any) => ({
+        ...prevData,
+        class: {
+          connect: {
+            id: classId,
+          },
+        },
+      }));
+    }
+  }, [classId]);
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -67,7 +87,6 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
     axios
       .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
-        // console.log(resp);
         setCreating(false);
         setCreateSuccess(true);
         setTimeout(() => {
@@ -105,9 +124,7 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
     const isRelationalField = schemaRelationalFields?.some(
       (field: any) => !propRelationalFields?.includes(field)
     );
-    // console.log({ isRelationalField });
     setIsRelational(!!isRelationalField);
-
     setLoading(false);
   }, []);
 
@@ -147,7 +164,7 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto my-10 px-2">
+    <div className="max-w-5xl mx-auto my-10 px-4 sm:px-6 lg:px-8">
       {page && (
         <Breadcrumb className="mb-5">
           <BreadcrumbList>
@@ -169,32 +186,50 @@ export const CreateLecture = ({ model, callbackFn, relation, page }: any) => {
         setData={setData}
         action={"create"}
       />
-     {!relation && (
-       <Select
-       onValueChange={(e) =>
-         setData({
-           ...data,
-           class: {
-             connect: {
-               id: e,
-             },
-           },
-         })
-       }
-     >
-       <SelectTrigger className="w-[180px]">
-         <SelectValue placeholder="Select Class" />
-       </SelectTrigger>
-       <SelectContent>
-         {classes.map((option: any) => (
-           <SelectItem key={option.id} value={option.id}>
-             {option.name}
-           </SelectItem>
-         ))}
-       </SelectContent>
-     </Select>
-     )}
+      <div className="mt-10">
+        <Popover>
+          <PopoverTrigger className="w-full">
+            <Command className="w-full">
+              <CommandInput
+                placeholder="Type a class or search..."
+                className="rounded-t-lg"
+              />
+              <PopoverContent className="max-h-60 w-full overflow-auto">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandList>
+                  {classes.map((option: any) => (
+                    <CommandItem
+                      key={option.id}
+                      value={option.id}
+                      defaultValue={classId}
+                      onSelect={() => {
+                        setData({
+                          ...data,
+                          class: {
+                            connect: {
+                              id: option.id,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          option.id === classId ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {option.name}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </PopoverContent>
+            </Command>
+          </PopoverTrigger>
+        </Popover>
+      </div>
       <Button
+        className="mt-4 w-full sm:w-auto"
         onClick={() => {
           createRecord();
         }}

@@ -22,6 +22,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 export const CreateStudentsInClasses = ({
   model,
@@ -36,7 +43,7 @@ export const CreateStudentsInClasses = ({
   const [createSuccess, setCreateSuccess] = useState(false);
   const [createFail, setCreateFail] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [classes, setClasses] = useState<any[]>([]);
   const [isRelational, setIsRelational] = useState(false);
 
   useEffect(() => {
@@ -50,7 +57,18 @@ export const CreateStudentsInClasses = ({
       });
   }, []);
 
-  // console.log({ students, classes });
+  useEffect(() => {
+    axios
+      .get("/api/v1/dynamic/class")
+      .then((resp: any) => {
+        setClasses(resp.data);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  }, []);
+
+  console.log({ students, classes });
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -70,10 +88,7 @@ export const CreateStudentsInClasses = ({
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, {
-        ...data,
-        class: { connect: { id: id } },
-      })
+      .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
         setCreating(false);
         setCreateSuccess(true);
@@ -175,7 +190,8 @@ export const CreateStudentsInClasses = ({
         setData={setData}
         action={"create"}
       />
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between">
+        <h1>Select Student</h1>
         <Select
           onValueChange={(e) =>
             setData({
@@ -193,6 +209,33 @@ export const CreateStudentsInClasses = ({
           </SelectTrigger>
           <SelectContent>
             {students.map((option: any) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-4 justify-between">
+        <h1>Select Class</h1>
+        <Select
+          defaultValue={id}
+          onValueChange={(e) =>
+            setData({
+              ...data,
+              class: {
+                connect: {
+                  id: e,
+                },
+              },
+            })
+          }
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select Student" />
+          </SelectTrigger>
+          <SelectContent>
+            {classes.map((option: any) => (
               <SelectItem key={option.id} value={option.id}>
                 {option.name}
               </SelectItem>

@@ -13,7 +13,7 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
 import { buttonVariants } from "@/components/ui/button";
-export const ListTasks = ({ modelSlug,id }: any) => {
+export const ListTasks = ({ modelSlug,lecture_id }: any) => {
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&sortfield=${
       allModels.find((model) => model.model === modelSlug)?.searchConfig
@@ -87,7 +87,7 @@ export const ListTasks = ({ modelSlug,id }: any) => {
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
           <Link
-            href={`/${prePath}/${modelSlug}/create?lectureId=${id}`}
+            href={`/${prePath}/${modelSlug}/create?lectureId=${lecture_id}`}
             className={buttonVariants({ variant: "default", size: "sm" })}
           >
             <Plus className="h-5 w-5" />

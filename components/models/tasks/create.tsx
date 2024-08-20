@@ -14,8 +14,16 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export const CreateTasks = ({ model, callbackFn, relation, page, id }: any) => {
+export const CreateTasks = ({
+  model,
+  callbackFn,
+  relation,
+  page,
+  lecture_id,
+}: any) => {
+  const [lectures, setLectures] = useState([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -24,10 +32,33 @@ export const CreateTasks = ({ model, callbackFn, relation, page, id }: any) => {
 
   const [isRelational, setIsRelational] = useState(false);
 
-  // console.log(lectures);
+  useEffect(() => {
+    axios
+      .get("/api/v1/dynamic/lecture")
+      .then((res: any) => {
+        setLectures(res.data);
+        setLoading(false);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, []);
 
-  // console.log({ data });
 
+  useEffect(() => {
+    if (lecture_id) {
+      setData((prevData: any) => ({
+        ...prevData,
+        lecture: {
+          connect: {
+            id: lecture_id,
+          },
+        },
+      }));
+    }
+  }, [lecture_id]);
+  
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
 
@@ -46,10 +77,7 @@ export const CreateTasks = ({ model, callbackFn, relation, page, id }: any) => {
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`, {
-        ...data,
-        lecture: { connect: { id: id } },
-      })
+      .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
         // console.log(resp);
         setCreating(false);
@@ -153,6 +181,33 @@ export const CreateTasks = ({ model, callbackFn, relation, page, id }: any) => {
         setData={setData}
         action={"create"}
       />
+       <div className="flex justify-between items-center">
+        <h1>Select Lecture</h1>
+      <Select
+      defaultValue={lecture_id}
+       onValueChange={(e) =>
+         setData({
+           ...data,
+           lecture: {
+             connect: {
+               id: e || lecture_id,
+             },
+           },
+         })
+       }
+     >
+       <SelectTrigger className="w-[180px]">
+         <SelectValue placeholder="Select Lecture" />
+       </SelectTrigger>
+       <SelectContent>
+         {lectures.map((option: any) => (
+           <SelectItem key={option.id} value={option.id}>
+             {option.name}
+           </SelectItem>
+         ))}
+       </SelectContent>
+     </Select>
+      </div>
       <Button
         onClick={() => {
           createRecord();

@@ -46,7 +46,7 @@ export const TaskCompleteCreate = ({
       });
   }, []);
 
-   console.log({tasks});
+  //  console.log({tasks});
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
