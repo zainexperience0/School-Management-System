@@ -14,8 +14,10 @@ import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "@/components/models/FilterTools";
 import { Badge } from "@/components/ui/badge";
+import { useStudentId } from "@/lib/hooks/studentId-get";
 
 export const ListStudentsFee = ({ modelSlug, id }: any) => {
+  const studentId = useStudentId();
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&${
       id ? `eq=true&fields=classToStudentId&classToStudentId=${id}` : ""
@@ -30,12 +32,8 @@ export const ListStudentsFee = ({ modelSlug, id }: any) => {
     searchQuery,
   });
 
-  // console.log({ data });
-
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
-
-  // console.log({ data });
 
   useEffect(() => {
     console.log();
@@ -95,13 +93,15 @@ export const ListStudentsFee = ({ modelSlug, id }: any) => {
             {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
-          <Link
-            href={`/${prePath}/${modelSlug}/create${
-              id ? `?classToStudentId=${id}` : ""}`}
-            className={buttonVariants({ variant: "default", size: "sm" })}
-          >
-            <Plus className="h-5 w-5" />
-          </Link>
+         {!studentId && (
+           <Link
+           href={`/${prePath}/${modelSlug}/create${
+             id ? `?classToStudentId=${id}` : ""}`}
+           className={buttonVariants({ variant: "default", size: "sm" })}
+         >
+           <Plus className="h-5 w-5" />
+         </Link>
+         )}
         </div>
       )}
 
@@ -142,24 +142,26 @@ export const ListStudentsFee = ({ modelSlug, id }: any) => {
                   </div>
                 </Link>
 
-                <div className="flex flex-row items-center justify-end space-x-2">
-                  <Link
-                    href={`/${prePath}/${modelSlug}/edit/${item.id}`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Link>
-                </div>
+               {!studentId && (
+               <div className="flex flex-row items-center justify-end space-x-2">
+               <Link
+                 href={`/${prePath}/${modelSlug}/edit/${item.id}`}
+                 className={cn(
+                   buttonVariants({ variant: "default", size: "sm" })
+                 )}
+               >
+                 <Pencil className="h-4 w-4" />
+               </Link>
+               <Link
+                 href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
+                 className={cn(
+                   buttonVariants({ variant: "default", size: "sm" })
+                 )}
+               >
+                 <Trash className="h-4 w-4" />
+               </Link>
+             </div>
+               )}
               </CardHeader>
             </Card>
           </Fragment>

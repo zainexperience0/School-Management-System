@@ -25,6 +25,8 @@ export const ListClasses = ({ modelSlug }: any) => {
     modelSlug,
     searchQuery,
   });
+  
+  
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
 

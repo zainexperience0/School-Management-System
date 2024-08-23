@@ -23,8 +23,6 @@ export const TasksCompletedEdit = ({ model, id, callbackFn }: any) => {
   const [editing, setEditing] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
   const [editFail, setEditFail] = useState(false);
-
-  console.log(data);
   
 
   const updateRecord = () => {

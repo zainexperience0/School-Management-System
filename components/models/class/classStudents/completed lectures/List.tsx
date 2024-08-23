@@ -13,13 +13,13 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "@/components/models/FilterTools";
-export const ListCompletedLectures = ({ modelSlug, id }: any) => {
+import { useStudentId } from "@/lib/hooks/studentId-get";
+export const ListCompletedLectures = ({ modelSlug, student_id }: any) => {
+  const studentid = useStudentId();
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&${
-      id ? `eq=true&fields=classToStudentId&classToStudentId=${id}` : ""
-    }&sortfield=${
-      allModels.find((model) => model.model === modelSlug)?.searchConfig
-        ?.sortField
+    `&sortby=desc&${student_id ? `eq=true&fields=classToStudentId&classToStudentId=${student_id}` : ""
+    }&sortfield=${allModels.find((model) => model.model === modelSlug)?.searchConfig
+      ?.sortField
     }`
   );
 
@@ -27,6 +27,10 @@ export const ListCompletedLectures = ({ modelSlug, id }: any) => {
     modelSlug,
     searchQuery,
   });
+
+  
+  
+
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
 
@@ -41,10 +45,8 @@ export const ListCompletedLectures = ({ modelSlug, id }: any) => {
     const sortBy = model.searchConfig?.sortBy;
     const search = "";
     setSearchQuery(
-      `${search?.length > 0 ? `&s=${search}` : ""}${
-        fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
-      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${
-        sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
+      `${search?.length > 0 ? `&s=${search}` : ""}${fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
+      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
       }`
     );
     setLoading(false);
@@ -88,17 +90,19 @@ export const ListCompletedLectures = ({ modelSlug, id }: any) => {
             {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
-          <Link
-            href={`/${prePath}/${modelSlug}/create${id ? `?id=${id}` : ""}`}
-            className={buttonVariants({ variant: "default", size: "sm" })}
-          >
-            <Plus className="h-5 w-5" />
-          </Link>
+          {!studentid && (
+            <Link
+              href={`/${prePath}/${modelSlug}/create${student_id ? `?student_id=${student_id}` : ""}`}
+              className={buttonVariants({ variant: "default", size: "sm" })}
+            >
+              <Plus className="h-5 w-5" />
+            </Link>
+          )}
         </div>
       )}
 
       <div className="my-10 space-y-4">
-        {data?.map((item: any) => (
+        {data?.filter((item: any) => item.canView === true).map((item: any) => (
           <Fragment key={item.id}>
             <Card key={item.id}>
               <CardHeader className="group flex flex-row justify-between items-start">
@@ -107,7 +111,7 @@ export const ListCompletedLectures = ({ modelSlug, id }: any) => {
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
                   <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
-                    <span>{item[model.meta.title]}</span>
+                    <span>{item.status}</span>
                     <MoveRight className=" opacity-75" />
                   </CardTitle>
                   <CardDescription className=" line-clamp-3 ">
@@ -125,24 +129,26 @@ export const ListCompletedLectures = ({ modelSlug, id }: any) => {
                   </div>
                 </Link>
 
-                <div className="flex flex-row items-center justify-end space-x-2">
-                  <Link
-                    href={`/${prePath}/${modelSlug}/edit/${item.id}`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Link>
-                </div>
+                {!studentid && (
+                  <div className="flex flex-row items-center justify-end space-x-2">
+                    <Link
+                      href={`/${prePath}/${modelSlug}/edit/${item.id}`}
+                      className={cn(
+                        buttonVariants({ variant: "default", size: "sm" })
+                      )}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
+                      className={cn(
+                        buttonVariants({ variant: "default", size: "sm" })
+                      )}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Link>
+                  </div>
+                )}
               </CardHeader>
             </Card>
           </Fragment>

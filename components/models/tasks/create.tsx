@@ -67,8 +67,7 @@ export const CreateTasks = ({
         },
       }));
     }
-  }, [lecture_id]);
-
+  }, [lecture_id]) 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
 

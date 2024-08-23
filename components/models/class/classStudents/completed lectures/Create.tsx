@@ -41,6 +41,7 @@ export const LectureCompleteCreate = ({
   page,
   student_id,
 }: any) => {
+  
   const [students, setStudents] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
@@ -64,7 +65,7 @@ export const LectureCompleteCreate = ({
       });
   }, []);
 
-  console.log({students});
+  // console.log({students});
   
 
   useEffect(() => {
@@ -79,8 +80,6 @@ export const LectureCompleteCreate = ({
       }));
     }
   }, [student_id]);
-
-  // console.log({data});
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);

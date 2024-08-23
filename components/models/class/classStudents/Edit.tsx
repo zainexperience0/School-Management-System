@@ -63,8 +63,6 @@ export const ClassToStudentEdit = ({ model, id, callbackFn }: any) => {
         setEditFail(true);
       });
   };
-
-  console.log({data});
   
   const resetFields = () => {
     setEditing(false);
@@ -79,7 +77,7 @@ export const ClassToStudentEdit = ({ model, id, callbackFn }: any) => {
 
   const fetchData = () => {
     axios
-      .get(`/api/v1/dynamic/${model.model}/${id}`)
+      .get(`/api/v1/dynamic/${model.model}/${id}?purpose=edit`)
       .then((resp: any) => {
         setData(resp.data);
         setLoading(false);

@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { MarkdownViewer } from "@/components/customView/markdown";
 
 export const ViewTaskCompleted = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
@@ -88,7 +89,7 @@ export const ViewTaskCompleted = ({ modelSlug, id }: any) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{data.title}</BreadcrumbPage>
+            <BreadcrumbPage>{data.Task.name}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -128,6 +129,14 @@ export const ViewTaskCompleted = ({ modelSlug, id }: any) => {
           Updated {timeAgo(data?.updatedAt)}
         </p>
       </div>
+      <div>
+        <h1>Comment</h1>
+        <MarkdownViewer content={data?.comment} />
+      </div>
+     <div>
+      <h1>Delivery</h1>
+     <MarkdownViewer content={data?.delivery} />
+     </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, Check, CheckCircle, Loader } from "lucide-react";
+import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,7 +26,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
 
 export const CreateLecture = ({
   model,
@@ -35,6 +34,7 @@ export const CreateLecture = ({
   page,
   classId,
 }: any) => {
+  
   const [classes, setClasses] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
@@ -66,7 +66,7 @@ export const CreateLecture = ({
       }));
     }
   }, [classId]);
-
+  
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
 

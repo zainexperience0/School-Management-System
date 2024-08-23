@@ -23,8 +23,6 @@ export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
 
-  console.log({ data });
-
   useEffect(() => {
     setModel(allModels.find((model: any) => model.model === modelSlug));
     fetchData();

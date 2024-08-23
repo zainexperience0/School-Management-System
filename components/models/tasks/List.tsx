@@ -27,6 +27,7 @@ export const ListTasks = ({ modelSlug, lecture_id }: any) => {
     modelSlug,
     searchQuery,
   });
+
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
 

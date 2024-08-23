@@ -66,15 +66,16 @@ model Class {
 }
 
 model Lecture {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  classId   String   @db.ObjectId
-  duration  Int //hours from start date
-  name      String
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tasks     Task[]
+  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  class            Class              @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  classId          String             @db.ObjectId
+  duration         Int //hours from start date
+  name             String
+  content          String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  tasks            Task[]
+  lectureCompleted LectureCompleted[]
 }
 
 model Task {
@@ -120,26 +121,32 @@ model ClassToStudent {
 }
 
 enum LectureStatus {
-  COMPLETED
-  IN_COMPLETE
   IN_PROGRESS
+  COMPLETED
 }
 
+// only student can create this
 model LectureCompleted {
   id               String          @id @default(auto()) @map("_id") @db.ObjectId
   status           LectureStatus   @default(IN_PROGRESS)
-  start            DateTime
-  end              DateTime
-  classToStudent   ClassToStudent? @relation(fields: [classToStudentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  classToStudentId String?         @db.ObjectId
-  taskCompleted    TaskCompleted[]
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  duration         Int             @default(24) //in hours
+  canView          Boolean         @default(true)
+
+  classToStudent   ClassToStudent @relation(fields: [classToStudentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  classToStudentId String         @db.ObjectId
+  lecture       Lecture        @relation(fields: [lectureId], references: [id])
+  lectureId     String         @db.ObjectId
+
+  taskCompleted TaskCompleted[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
 }
 
 enum TaskStatus {
+  NOT_STARTED
+  IN_PROGRESS
   COMPLETED
-  IN_COMPLETE
   APPROVED
   NOT_APPROVED
 }
@@ -148,7 +155,7 @@ model TaskCompleted {
   id                 String           @id @default(auto()) @map("_id") @db.ObjectId
   Task               Task             @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   taskId             String           @db.ObjectId
-  status             TaskStatus       @default(IN_COMPLETE)
+  status             TaskStatus       @default(NOT_STARTED)
   lectureCompleted   LectureCompleted @relation(fields: [lectureCompletedId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   lectureCompletedId String           @db.ObjectId
   comment            String

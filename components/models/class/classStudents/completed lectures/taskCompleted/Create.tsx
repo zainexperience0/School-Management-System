@@ -204,7 +204,7 @@ export const TaskCompleteCreate = ({
           <PopoverTrigger className="w-full">
             <Command className="w-full">
               <CommandInput
-                placeholder="Type a class or search..."
+                placeholder="Type a task or search..."
                 className="rounded-t-lg"
               />
               <PopoverContent className="max-h-60 w-full overflow-auto">

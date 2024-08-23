@@ -21,7 +21,7 @@ export const EmailInputField = ({ field, record, setRecord }: any) => (
       className={`focus-visible:ring-0 ${getStrengthClass(record[field.slug])}`}
       onChange={(e: any) => {
         const record_1 = { ...record };
-        record_1[field.slug] = e.target.value;
+        record_1[field.slug] = e.target.value.toLowerCase();
         setRecord(record_1);
       }}
     />

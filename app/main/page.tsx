@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 import { useMainData } from "@/lib/hooks/getMaindata";
 import { useTeacherId } from "@/lib/hooks/teacherId-get";
 import { Loader } from "lucide-react";
@@ -19,15 +20,12 @@ const MainPage = () => {
     students,
     teachers,
     classes,
-    lectures,
-    tasks,
-    lecturesCompleted,
-    tasksCompleted,
     loading,
     error,
-    fees
   } = useMainData();
   const teacherId: any = useTeacherId();
+
+  useAdminCheck();
 
   const [mounted, setMounted] = useState(false);
 
@@ -45,14 +43,11 @@ const MainPage = () => {
     );
   }
 
-  if(error) {
+  if (error) {
     return <div>{error}</div>;
   }
   return (
     <div className="py-6">
-      <h1 className="text-4xl text-center font-extrabold mb-8">
-        School Management System
-      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {/* Total Students Card */}
         <Card className="rounded-lg">
@@ -119,117 +114,6 @@ const MainPage = () => {
           </CardContent>
         </Card>
 
-        {/* Total Lectures Card */}
-        <Card className="rounded-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-2xl sm:text-3xl lg:text-4xl">
-              Total Lectures
-            </CardTitle>
-            <CardDescription>View all scheduled lectures</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold">{lectures.length}</h1>
-              <Button
-                variant="outline"
-                onClick={() => (window.location.href = "/main/lecture")}
-              >
-                Visit
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Completed Lectures Card */}
-        <Card className="rounded-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-2xl sm:text-3xl lg:text-4xl">
-              Completed Lectures
-            </CardTitle>
-            <CardDescription>Track completed lectures</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold">
-                {lecturesCompleted.length}
-              </h1>
-              <Button
-                variant="outline"
-                onClick={() =>
-                  (window.location.href = "/main/lectureCompleted")
-                }
-              >
-                Visit
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Total Tasks Card */}
-        <Card className="rounded-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-2xl sm:text-3xl lg:text-4xl">
-              Total Tasks
-            </CardTitle>
-            <CardDescription>View all assigned tasks</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold">{tasks.length}</h1>
-              <Button
-                variant="outline"
-                onClick={() => (window.location.href = "/main/task")}
-              >
-                Visit
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Completed Tasks Card */}
-        <Card className="rounded-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-2xl sm:text-3xl lg:text-4xl">
-              Completed Tasks
-            </CardTitle>
-            <CardDescription>Track completed tasks</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold">
-                {tasksCompleted.length}
-              </h1>
-              <Button
-                variant="outline"
-                onClick={() => (window.location.href = "/main/taskCompleted")}
-              >
-                Visit
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-{/** Fee Section */}
-        <Card className="rounded-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-2xl sm:text-3xl lg:text-4xl">
-              Fee
-            </CardTitle>
-            <CardDescription>Track Fees</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold">
-                {fees.length}
-              </h1>
-              <Button
-                variant="outline"
-                onClick={() => (window.location.href = "/main/fee")}
-              >
-                Visit
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
       <div className="mt-8 sm:mt-12 md:mt-16">
         <Image

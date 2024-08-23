@@ -63,8 +63,6 @@ export const LectureCompletedEdit = ({ model, id, callbackFn }: any) => {
         setEditFail(true);
       });
   };
-
-  console.log({data});
   
   const resetFields = () => {
     setEditing(false);

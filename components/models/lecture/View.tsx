@@ -137,7 +137,7 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
           <ListTasks modelSlug={"task"} lecture_id={data.id} />
         </TabsContent>
         <TabsContent value="taskCompleted">
-          <ListCompletedTasks modelSlug={"taskCompleted"} />
+          <ListCompletedTasks modelSlug={"taskCompleted"} lecture_id={data?.id}/>
         </TabsContent>
       </Tabs>
     </div>

@@ -15,7 +15,6 @@ import { InputWrapper } from "@/components/custom/inputWrapper";
 import { Button } from "@/components/ui/button";
 
 export const LectureEdit = ({ model, id, callbackFn }: any) => {
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
@@ -23,9 +22,6 @@ export const LectureEdit = ({ model, id, callbackFn }: any) => {
   const [editing, setEditing] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
   const [editFail, setEditFail] = useState(false);
-
-  console.log({data});
-  
 
   const updateRecord = () => {
     const requiredFields = model.fields?.filter(
@@ -133,7 +129,12 @@ export const LectureEdit = ({ model, id, callbackFn }: any) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <InputWrapper model={model} data={data} setData={setData} action={"update"} />
+      <InputWrapper
+        model={model}
+        data={data}
+        setData={setData}
+        action={"update"}
+      />
       <Button
         onClick={() => {
           updateRecord();

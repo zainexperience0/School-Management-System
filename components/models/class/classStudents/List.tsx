@@ -13,14 +13,16 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "../../FilterTools";
+import { useStudentId } from "@/lib/hooks/studentId-get";
+import { Badge } from "@/components/ui/badge";
 export const ListClassStudents = ({ modelSlug, id }: any) => {
-  
+  const studentId = useStudentId();
+
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&${
-      id ? `eq=true&fields=classId&classId=${id}` : ""
-    }&sortfield=${
-      allModels.find((model) => model.model === modelSlug)?.searchConfig
-        ?.sortField
+    `&sortby=desc&${id ? `eq=true&fields=classId&classId=${id}` : ""
+    }&sortfield=${allModels.find((model) => model.model === modelSlug)?.searchConfig
+      ?.sortField
+    }${studentId ? `&studentId=${studentId}` : ""
     }`
   );
 
@@ -28,6 +30,9 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
     modelSlug,
     searchQuery,
   });
+  
+
+
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
 
@@ -40,10 +45,8 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
     const sortBy = model.searchConfig?.sortBy;
     const search = "";
     setSearchQuery(
-      `${search?.length > 0 ? `&s=${search}` : ""}${
-        fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
-      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${
-        sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
+      `${search?.length > 0 ? `&s=${search}` : ""}${fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
+      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
       }`
     );
     setLoading(false);
@@ -83,18 +86,17 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center space-x-4">
             <p className="text-5xl  font-semibold capitalize">{model.name}</p>
-            {/* build search query in url for next pages also */}
-            {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
-          <Link
-            href={`/${prePath}/${modelSlug}/create${
-              id ? `?classId=${id}` : ""
-            }`}
-            className={buttonVariants({ variant: "default", size: "sm" })}
-          >
-            <Plus className="h-5 w-5" />
-          </Link>
+          {!studentId && (
+            <Link
+              href={`/${prePath}/${modelSlug}/create${id ? `?classId=${id}` : ""
+                }`}
+              className={buttonVariants({ variant: "default", size: "sm" })}
+            >
+              <Plus className="h-5 w-5" />
+            </Link>
+          )}
         </div>
       )}
 
@@ -108,6 +110,7 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
                   <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
+                    {studentId === item.student.id && <Badge className="bg-green-500">Me</Badge>}
                     <span>{item.student.name}</span>
                     <MoveRight className=" opacity-75" />
                   </CardTitle>
@@ -126,24 +129,26 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
                   </div>
                 </Link>
 
-                <div className="flex flex-row items-center justify-end space-x-2">
-                  <Link
-                    href={`/${prePath}/${modelSlug}/edit/${item.id}`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Link>
-                </div>
+                {!studentId && (
+                  <div className="flex flex-row items-center justify-end space-x-2">
+                    <Link
+                      href={`/${prePath}/${modelSlug}/edit/${item.id}`}
+                      className={cn(
+                        buttonVariants({ variant: "default", size: "sm" })
+                      )}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
+                      className={cn(
+                        buttonVariants({ variant: "default", size: "sm" })
+                      )}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Link>
+                  </div>
+                )}
               </CardHeader>
             </Card>
           </Fragment>

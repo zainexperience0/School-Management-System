@@ -63,8 +63,6 @@ export const FeeEdit = ({ model, id, callbackFn }: any) => {
         setEditFail(true);
       });
   };
-
-  console.log({data});
   
   const resetFields = () => {
     setEditing(false);

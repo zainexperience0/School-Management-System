@@ -15,7 +15,7 @@ import { FilterTools } from "../FilterTools";
 import { buttonVariants } from "@/components/ui/button";
 export const ListLecturesData = ({ modelSlug, id }: any) => {
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&${
+    `&sortby=asc&${
       id ? `eq=true&fields=classId&classId=${id}` : ""
     }&sortfield=${
       allModels.find((model) => model.model === modelSlug)?.searchConfig
@@ -27,6 +27,8 @@ export const ListLecturesData = ({ modelSlug, id }: any) => {
     modelSlug,
     searchQuery,
   });
+  
+
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
 

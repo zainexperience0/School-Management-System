@@ -70,7 +70,7 @@ export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
         setTimeout(() => {
           resetFields();
           if (!callbackFn) {
-            window.location.href = "/main/class";
+            window.location.href = "/main/student";
           } else {
             callbackFn()
           }

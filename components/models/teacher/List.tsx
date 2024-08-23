@@ -8,36 +8,21 @@ import {
 } from "@/components/ui/card";
 import { allModels, prePath } from "@/lib/schemas";
 import Link from "next/link";
-import { Loader, LogOut, MoveRight, Pencil, Plus, Trash } from "lucide-react";
+import { Loader, MoveRight, Pencil, Plus, Trash } from "lucide-react";
 import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
-import { useLocalStorage } from "usehooks-ts";
 
 export const AdminPanel = ({ modelSlug }: any) => {
-  const [teacherId, setTeacherId, removeTeacherId] = useLocalStorage(
-    "teacherId",
-    ""
-  );
-  const [studentId, setStudentId, removeStudentId] = useLocalStorage(
-    "studentId",
-    ""
-  );
 
-  const logout = () => {
-    removeTeacherId();
-    removeStudentId();
-    location.href = "/";
-  };
 
   useAdminCheck();
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&sortfield=${
-      allModels.find((model) => model.model === modelSlug)?.searchConfig
-        ?.sortField
+    `&sortby=desc&sortfield=${allModels.find((model) => model.model === modelSlug)?.searchConfig
+      ?.sortField
     }`
   );
   const { data, isLoading, isFailed, isEnd } = useInfiniteQuery({
@@ -56,10 +41,8 @@ export const AdminPanel = ({ modelSlug }: any) => {
     const sortBy = model.searchConfig?.sortBy;
     const search = "";
     setSearchQuery(
-      `${search?.length > 0 ? `&s=${search}` : ""}${
-        fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
-      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${
-        sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
+      `${search?.length > 0 ? `&s=${search}` : ""}${fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
+      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
       }`
     );
     setLoading(false);
@@ -101,9 +84,7 @@ export const AdminPanel = ({ modelSlug }: any) => {
             <p className="text-5xl  font-semibold capitalize">{model.name}</p>
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
-          <Button variant="destructive" size="sm" onClick={logout}>
-            <LogOut className="h-5 w-5" />
-          </Button>
+
           <Link
             href={`/${prePath}/${modelSlug}/create`}
             className={buttonVariants({ variant: "default", size: "sm" })}

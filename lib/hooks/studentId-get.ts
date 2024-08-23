@@ -1,7 +1,7 @@
 import { useReadLocalStorage } from "usehooks-ts";
 
 export const useStudentId = () => {
-  const teacherId = useReadLocalStorage("teacherId");
+  const teacherId: any = useReadLocalStorage("studentId");
 
   return teacherId;
 };

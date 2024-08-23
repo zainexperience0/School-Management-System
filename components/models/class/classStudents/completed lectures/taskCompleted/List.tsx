@@ -13,13 +13,14 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "@/components/models/FilterTools";
-export const ListCompletedTasks = ({ modelSlug, id }: any) => {
+import { Badge } from "@/components/ui/badge";
+export const ListCompletedTasks = ({ modelSlug, lecture_id }: any) => {
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&${
-      id ? `eq=true&fields=lectureCompletedId&lectureCompletedId=${id}` : ""
-    }&sortfield=${
-      allModels.find((model) => model.model === modelSlug)?.searchConfig
-        ?.sortField
+    `&sortby=desc&${lecture_id
+      ? `eq=true&fields=lectureCompletedId&lectureCompletedId=${lecture_id}`
+      : ""
+    }&sortfield=${allModels.find((model) => model.model === modelSlug)?.searchConfig
+      ?.sortField
     }`
   );
 
@@ -27,6 +28,7 @@ export const ListCompletedTasks = ({ modelSlug, id }: any) => {
     modelSlug,
     searchQuery,
   });
+
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
   useEffect(() => {
@@ -40,10 +42,8 @@ export const ListCompletedTasks = ({ modelSlug, id }: any) => {
     const sortBy = model.searchConfig?.sortBy;
     const search = "";
     setSearchQuery(
-      `${search?.length > 0 ? `&s=${search}` : ""}${
-        fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
-      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${
-        sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
+      `${search?.length > 0 ? `&s=${search}` : ""}${fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
+      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
       }`
     );
     setLoading(false);
@@ -88,7 +88,8 @@ export const ListCompletedTasks = ({ modelSlug, id }: any) => {
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
           <Link
-            href={`/${prePath}/${modelSlug}/create${id ? `?lectureCompleted=${id}` : ""}`}
+            href={`/${prePath}/${modelSlug}/create${lecture_id ? `?lectureCompleted=${lecture_id}` : ""
+              }`}
             className={buttonVariants({ variant: "default", size: "sm" })}
           >
             <Plus className="h-5 w-5" />
@@ -106,7 +107,8 @@ export const ListCompletedTasks = ({ modelSlug, id }: any) => {
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
                   <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
-                    <span>{item.status}</span>
+                    <span>{item.Task.name}</span>
+                    <Badge>{item.status}</Badge>
                     <MoveRight className=" opacity-75" />
                   </CardTitle>
                   <CardDescription className=" line-clamp-3 ">

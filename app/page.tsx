@@ -5,14 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoginSchema } from "@/lib/schemas";
 import Image from "next/image";
+import { useLogin } from "@/lib/hooks/useCheckLogin";
 
 export default function Home() {
-  // const adminId = useReadLocalStorage("adminId");
-  // useEffect(() => {
-  //   if (adminId) {
-  //     window.location.href = "/main/admin";
-  //   }
-  // }, [adminId]);
+  useLogin();
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-6 sm:p-8 md:p-16 lg:p-24">
       <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center">

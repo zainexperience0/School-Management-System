@@ -16,12 +16,10 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -68,7 +66,18 @@ export const CreateStudentsInClasses = ({
       });
   }, []);
 
-  console.log({ students, classes });
+  useEffect(() => {
+    if (id) {
+      setData((prevData: any) => ({
+        ...prevData,
+        class: {
+          connect: {
+            id: id,
+          },
+        },
+      }));
+    }
+  }, [id]);
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -190,7 +199,7 @@ export const CreateStudentsInClasses = ({
         setData={setData}
         action={"create"}
       />
-      <div className="flex flex-col sm:flex-row gap-4 justify-between">
+      {/* <div className="flex flex-col sm:flex-row gap-4 justify-between">
         <h1>Select Student</h1>
         <Select
           onValueChange={(e) =>
@@ -242,6 +251,77 @@ export const CreateStudentsInClasses = ({
             ))}
           </SelectContent>
         </Select>
+      </div> */}
+      <div className="mt-10">
+        <Popover>
+          <PopoverTrigger className="w-full">
+            <Command className="w-full">
+              <CommandInput
+                placeholder="Type a class or search..."
+                className="rounded-t-lg"
+              />
+              <PopoverContent className="max-h-60 w-full overflow-auto">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandList>
+                  {classes.map((option: any) => (
+                    <CommandItem
+                      key={option.id}
+                      value={option.id}
+                      defaultValue={id}
+                      onSelect={() => {
+                        setData({
+                          ...data,
+                          class: {
+                            connect: {
+                              id: option.id,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {option.name}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </PopoverContent>
+            </Command>
+          </PopoverTrigger>
+        </Popover>
+      </div>
+      <div className="mt-10">
+        <Popover>
+          <PopoverTrigger className="w-full">
+            <Command className="w-full">
+              <CommandInput
+                placeholder="Type a class or search..."
+                className="rounded-t-lg"
+              />
+              <PopoverContent className="max-h-60 w-full overflow-auto">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandList>
+                  {students.map((option: any) => (
+                    <CommandItem
+                      key={option.id}
+                      value={option.id}
+                      onSelect={() => {
+                        setData({
+                          ...data,
+                          student: {
+                            connect: {
+                              id: option.id,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {option.name}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </PopoverContent>
+            </Command>
+          </PopoverTrigger>
+        </Popover>
       </div>
       <Button
         onClick={() => createRecord()}

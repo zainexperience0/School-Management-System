@@ -41,7 +41,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
         setFailed(true);
       });
   };
-
+  
   if (failed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">

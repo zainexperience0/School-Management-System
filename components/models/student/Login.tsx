@@ -24,7 +24,7 @@ export const StudentLogin = ({ model }: any) => {
     "studentId",
     ""
   );
-  
+
   const [data, setData] = useState<any>({});
   const [login, setLogin] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -57,7 +57,7 @@ export const StudentLogin = ({ model }: any) => {
         setStudentId(resp.data.id);
         setTimeout(() => {
           resetFields();
-          window.location.href = "/main/student";
+          window.location.href = `/main/student/view/${resp.data.id}`;
         }, 2000);
       })
       .catch((err: any) => {

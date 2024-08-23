@@ -14,12 +14,17 @@ import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
 import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useReadLocalStorage } from "usehooks-ts";
 
 export const ListStudents = ({ modelSlug }: any) => {
+  const studentId = useReadLocalStorage("studentId");
+
+  if (studentId) {
+    window.location.href = `/`;
+  }
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&sortfield=${
-      allModels.find((model) => model.model === modelSlug)?.searchConfig
-        ?.sortField
+    `&sortby=desc&sortfield=${allModels.find((model) => model.model === modelSlug)?.searchConfig
+      ?.sortField
     }`
   );
   const { data, isLoading, isFailed, isEnd } = useInfiniteQuery({
@@ -29,21 +34,18 @@ export const ListStudents = ({ modelSlug }: any) => {
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
 
+
   useEffect(() => {
     console.log();
     setModel(allModels.find((model) => model.model === modelSlug));
-    // const schema =  model.fields.filter((field: any) => field.frontend.includes("findMany"));
-    // console.log(schema);
 
     const fields = model.searchConfig?.searchFields;
     const sortField = model.searchConfig?.sortField;
     const sortBy = model.searchConfig?.sortBy;
     const search = "";
     setSearchQuery(
-      `${search?.length > 0 ? `&s=${search}` : ""}${
-        fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
-      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${
-        sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
+      `${search?.length > 0 ? `&s=${search}` : ""}${fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
+      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
       }`
     );
     setLoading(false);
@@ -82,9 +84,7 @@ export const ListStudents = ({ modelSlug }: any) => {
       {model?.name && (
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center space-x-4">
-            <p className="text-5xl  font-semibold capitalize">{model.name}</p>
-            {/* build search query in url for next pages also */}
-            {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
+            <p className="text-5xl  font-semibold capitalize">{model.name}({data?.length})</p>
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
           <Link
@@ -105,7 +105,7 @@ export const ListStudents = ({ modelSlug }: any) => {
                   className="flex flex-col space-y-2 cursor-pointer w-full"
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
-                  <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
+                  <CardTitle className="flex flex-row space-x-2">
                     <Avatar>
                       <AvatarImage src={item.image} />
                       <AvatarFallback>
@@ -114,7 +114,7 @@ export const ListStudents = ({ modelSlug }: any) => {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <span>{item[model.meta.title]}</span>
+                      <span>{item.name}</span>
                       <p className="text-sm text-muted-foreground">
                         {item?.email}
                       </p>

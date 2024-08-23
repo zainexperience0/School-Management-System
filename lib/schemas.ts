@@ -189,7 +189,7 @@ export const allModels = [
     ],
   },
   {
-    name: "Student",
+    name: "Student's",
     model: "student",
     meta: {
       title: "name",
@@ -272,8 +272,8 @@ export const allModels = [
         required: false, // tells whether this field is required in UI inputs
         dataType: "string", // Schema datatype mapping
         customClassName: "",
-        backend: ["findFirst", "findUnique", "create", "update", "delete"],
-        frontend: ["list", "view", "update", "delete", "create"],
+        backend: ["findFirst", "findUnique", "create", "delete"],
+        frontend: ["list", "view", "delete", "create"],
         valueGetter: () => {
           return "";
         },
@@ -646,8 +646,8 @@ export const allModels = [
         required: true,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "findUnique", "create"],
-        frontend: ["list", "view"],
+        backend: ["create"],
+        frontend: ["view"],
         valueGetter: () => {
           return "";
         },
@@ -766,8 +766,8 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "create"],
-        frontend: ["list", "view"],
+        backend: ["create", "findUnique", "findMany"],
+        frontend: ["view"],
         valueGetter: () => {
           return "";
         },
@@ -780,7 +780,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "create"],
+        backend: ["create", "findUnique", "findMany"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
@@ -979,48 +979,6 @@ export const allModels = [
     },
     fields: [
       {
-        name: "start",
-        slug: "start",
-        type: "dateInput",
-        defaultValue: new Date(),
-        required: false,
-        dataType: "string",
-        customClassName: "",
-        backend: [
-          "findFirst",
-          "findUnique",
-          "findMany",
-          "create",
-          "update",
-          "delete",
-        ],
-        frontend: ["list", "view", "update", "delete", "create"],
-        valueGetter: () => {
-          return new Date();
-        },
-      },
-      {
-        name: "End",
-        slug: "end",
-        type: "dateInput",
-        defaultValue: new Date(),
-        required: false,
-        dataType: "string",
-        customClassName: "",
-        backend: [
-          "findFirst",
-          "findUnique",
-          "findMany",
-          "create",
-          "update",
-          "delete",
-        ],
-        frontend: ["list", "view", "update", "delete", "create"],
-        valueGetter: () => {
-          return new Date();
-        },
-      },
-      {
         name: "classToStudent",
         slug: "classToStudent",
         type: "relation",
@@ -1028,10 +986,52 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "create"],
+        backend: ["findMany", "create" ],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";
+        },
+      },
+      {
+        name: "Duration",
+        slug: "duration",
+        type: "numberInput",
+        defaultValue: 24,
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return 24;
+        },
+      },
+      {
+        name: "Can View",
+        slug: "canView",
+        type: "switchInput",
+        defaultValue: false,
+        required: false,
+        dataType: "string",
+        customClassName: "",
+        backend: [
+          "findFirst",
+          "findUnique",
+          "findMany",
+          "create",
+          "update",
+          "delete",
+        ],
+        frontend: ["list", "view", "update", "delete", "create"],
+        valueGetter: () => {
+          return false;
         },
       },
       {
@@ -1040,7 +1040,7 @@ export const allModels = [
         type: "selectInput",
         defaultValue: "IN_COMPLETE",
         required: false,
-        options: ["COMPLETED", "IN_COMPLETE", "IN_PROGRESS"],
+        options: ["COMPLETED", "IN_COMPLETE", "IN_PROGRESS", "NOT_STARTED"],
         dataType: "string",
         customClassName: "",
         backend: [
@@ -1170,8 +1170,8 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "create"],
-        frontend: ["list", "view"],
+        backend: ["create"],
+        frontend: ["view"],
         valueGetter: () => {
           return "";
         },
@@ -1227,7 +1227,7 @@ export const allModels = [
         required: false,
         dataType: "relation",
         customClassName: "",
-        backend: ["findMany", "create"],
+        backend: ["findMany", "create", "findUnique"],
         frontend: ["list", "view"],
         valueGetter: () => {
           return "";

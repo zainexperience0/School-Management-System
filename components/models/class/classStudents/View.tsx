@@ -154,7 +154,7 @@ export const ViewStudentInClass = ({ modelSlug, id }: any) => {
         <ListStudentsFee modelSlug="fee" id={data?.id} />
         </TabsContent>
         <TabsContent value="lecturesCompleted">
-        <ListCompletedLectures modelSlug={"lectureCompleted"} id={data?.id}/>
+        <ListCompletedLectures modelSlug={"lectureCompleted"} student_id={data?.id}/>
         </TabsContent>
       </Tabs>
     </div>
