@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import { Button } from "@/components/ui/button";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const TeacherEdit = ({ model, id, callbackFn }: any) => {
-  // console.log({ modelSlug, id });
-
+  useAdminCheck();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);

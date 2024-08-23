@@ -13,7 +13,9 @@ import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
 import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 export const ListClasses = ({ modelSlug }: any) => {
+  useAdminCheck();
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&sortfield=${
       allModels.find((model) => model.model === modelSlug)?.searchConfig

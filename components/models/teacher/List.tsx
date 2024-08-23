@@ -17,12 +17,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const AdminPanel = ({ modelSlug }: any) => {
-
-
   useAdminCheck();
   const [searchQuery, setSearchQuery] = useState(
-    `&sortby=desc&sortfield=${allModels.find((model) => model.model === modelSlug)?.searchConfig
-      ?.sortField
+    `&sortby=desc&sortfield=${
+      allModels.find((model) => model.model === modelSlug)?.searchConfig
+        ?.sortField
     }`
   );
   const { data, isLoading, isFailed, isEnd } = useInfiniteQuery({
@@ -33,16 +32,18 @@ export const AdminPanel = ({ modelSlug }: any) => {
   const [model, setModel] = useState<any>({});
 
   useEffect(() => {
-    console.log();
-    setModel(allModels.find((model) => model.model === modelSlug));
+    const foundModel = allModels.find((model) => model.model === modelSlug);
+    setModel(foundModel);
 
-    const fields = model.searchConfig?.searchFields;
-    const sortField = model.searchConfig?.sortField;
-    const sortBy = model.searchConfig?.sortBy;
+    const fields = foundModel?.searchConfig?.searchFields || [];
+    const sortField = foundModel?.searchConfig?.sortField || "";
+    const sortBy = foundModel?.searchConfig?.sortBy || "";
     const search = "";
     setSearchQuery(
-      `${search?.length > 0 ? `&s=${search}` : ""}${fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
-      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
+      `${search?.length > 0 ? `&s=${search}` : ""}${
+        fields?.length > 0 ? `&fields=${fields.join(",")}` : ""
+      }${sortField?.length > 0 ? `&sortfield=${sortField}` : ""}${
+        sortBy?.length > 0 ? `&sortby=${sortBy}` : ""
       }`
     );
     setLoading(false);
@@ -51,7 +52,7 @@ export const AdminPanel = ({ modelSlug }: any) => {
   if (!model) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
-        <p className="text-destructive text-2xl font-semibold">
+        <p className="text-red-500 text-2xl font-semibold">
           Page not found!
         </p>
       </div>
@@ -61,7 +62,7 @@ export const AdminPanel = ({ modelSlug }: any) => {
   if (isFailed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
-        <p className="text-destructive text-2xl font-semibold">
+        <p className="text-red-500 text-2xl font-semibold">
           Failed to get data!
         </p>
       </div>
@@ -79,9 +80,9 @@ export const AdminPanel = ({ modelSlug }: any) => {
   return (
     <div className="mt-10 max-w-5xl mx-auto px-2">
       {model?.name && (
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center mb-6">
           <div className="flex flex-row items-center space-x-4">
-            <p className="text-5xl  font-semibold capitalize">{model.name}</p>
+            <p className="text-3xl font-bold">{model.name}</p>
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
 
@@ -103,27 +104,26 @@ export const AdminPanel = ({ modelSlug }: any) => {
                   className="flex flex-col space-y-2 cursor-pointer w-full"
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
-                  <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
+                  <CardTitle className="flex flex-row space-x-2 group-hover:underline items-center">
                     <Avatar>
                       <AvatarImage src={item.image} />
                       <AvatarFallback>
-                        {" "}
                         {item[model.meta.title][0]}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
-                      <span>{item[model.meta.title]}</span>
+                    <div className="flex-grow">
+                      <span className="font-semibold">{item[model.meta.title]}</span>
                       <p className="text-sm text-muted-foreground">
                         {item?.email}
                       </p>
                     </div>
                     <MoveRight className=" opacity-75" />
                   </CardTitle>
-                  <CardDescription className="line-clamp-3 ">
+                  <CardDescription className="line-clamp-3">
                     Phone: {item.phone}
                   </CardDescription>
                   <div className="flex flex-row space-x-4 items-center">
-                    <p className="text-sm text-muted-foreground ">
+                    <p className="text-sm text-muted-foreground">
                       {isoToDate(item?.createdAt)}
                     </p>
                     {item?.updatedAt !== item?.createdAt && (

@@ -1,25 +1,23 @@
 "use client";
-import { allModels, prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, Info, Loader, Pencil, Trash } from "lucide-react";
-import { cn, isoToDate, timeAgo } from "@/lib/utils";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft, Info, Loader, Pencil, Trash } from "lucide-react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListLecturesData } from "../lecture/List";
 import { ListClassStudents } from "./classStudents/List";
+import { MarkdownViewer } from "@/components/customView/markdown";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
+import { allModels, prePath } from "@/lib/schemas";
+import { calculateRemainingDays, cn, isoToDate, timeAgo } from "@/lib/utils";
 
 export const ViewClass = ({ modelSlug, id }: any) => {
+  useAdminCheck();
+
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -41,7 +39,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
         setFailed(true);
       });
   };
-  
+
   if (failed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
@@ -95,6 +93,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
         <p className="text-lg sm:text-xl text-muted-foreground">
           {isoToDate(data?.createdAt)}
@@ -116,11 +115,33 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           </Link>
         </div>
       </div>
+
       <p className="text-4xl sm:text-5xl font-semibold mb-2">{data.name}</p>
       <Separator className="my-4" />
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-10">
+        <Image
+          src={data.image}
+          alt={data.name}
+          width={200}
+          height={200}
+          className="sm:w-32 sm:h-32 rounded-full"
+        />
+        <div className="sm:flex-1">
+          <p className="text-lg font-semibold">
+            Duration: {data.duration} {data.duration > 1 ? 'months' : 'month'}
+          </p>
+          <p className="text-lg font-semibold">
+            Remaining: {calculateRemainingDays(data?.createdAt, data?.duration)} days
+          </p>
+          <MarkdownViewer content={data?.descriptiton} customClassName="border p-2" />
+        </div>
+      </div>
+
       <p className="text-lg text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
+
       <Tabs defaultValue="lecture" className="w-full">
         <TabsList className="w-full border-b border-muted">
           <TabsTrigger value="lecture" className="flex-1 text-center py-2">
@@ -131,10 +152,10 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="lecture">
-          <ListLecturesData modelSlug={"lecture"} id={data.id}/>
+          <ListLecturesData modelSlug={"lecture"} id={data.id} />
         </TabsContent>
         <TabsContent value="students">
-          <ListClassStudents modelSlug={"classToStudent"} id={data.id}/>
+          <ListClassStudents modelSlug={"classToStudent"} id={data.id} />
         </TabsContent>
       </Tabs>
     </div>

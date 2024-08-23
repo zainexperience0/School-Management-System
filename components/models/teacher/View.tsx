@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const ViewTeacher = ({ modelSlug, id }: any) => {
+  useAdminCheck();
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);

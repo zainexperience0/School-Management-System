@@ -16,8 +16,10 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import { generateFromEmail } from "unique-username-generator";
 import Image from "next/image";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
+  useAdminCheck();
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
