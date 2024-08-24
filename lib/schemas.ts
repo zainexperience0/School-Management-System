@@ -993,6 +993,20 @@ export const allModels = [
         },
       },
       {
+        name: "lecture",
+        slug: "lecture",
+        type: "relation",
+        defaultValue: "",
+        required: false,
+        dataType: "relation",
+        customClassName: "",
+        backend: ["findMany", "create" ],
+        frontend: ["list", "view"],
+        valueGetter: () => {
+          return "";
+        },
+      },
+      {
         name: "Duration",
         slug: "duration",
         type: "numberInput",
@@ -1038,9 +1052,9 @@ export const allModels = [
         name: "Status",
         slug: "status",
         type: "selectInput",
-        defaultValue: "IN_COMPLETE",
+        defaultValue: "IN_PROGRESS",
         required: false,
-        options: ["COMPLETED", "IN_COMPLETE", "IN_PROGRESS", "NOT_STARTED"],
+        options: ["COMPLETED","IN_PROGRESS"],
         dataType: "string",
         customClassName: "",
         backend: [
@@ -1053,7 +1067,7 @@ export const allModels = [
         ],
         frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
-          return "IN_COMPLETE";
+          return "IN_PROGRESS";
         },
       },
       {
@@ -1251,9 +1265,9 @@ export const allModels = [
         name: "Status",
         slug: "status",
         type: "selectInput",
-        defaultValue: "IN_COMPLETE",
+        defaultValue: "IN_PROGRESS",
         required: false,
-        options: ["COMPLETED", "IN_COMPLETE", "APPROVED", "NOT_APPROVED"],
+        options: ["COMPLETED", "IN_COMPLETE", "APPROVED", "NOT_APPROVED", "IN_PROGRESS"],
         dataType: "string",
         customClassName: "",
         backend: [
@@ -1264,9 +1278,9 @@ export const allModels = [
           "update",
           "delete",
         ],
-        frontend: ["list", "view", "update", "delete", "create"],
+        frontend: ["list", "view", "update", "delete"],
         valueGetter: () => {
-          return "IN_COMPLETE";
+          return "IN_PROGRESS";
         },
       },
       {
@@ -1285,7 +1299,7 @@ export const allModels = [
           "update",
           "delete",
         ],
-        frontend: ["list", "view", "update", "delete", "create"],
+        frontend: ["list", "view", "update", "delete"],
         valueGetter: () => {
           return "";
         },
@@ -1306,7 +1320,7 @@ export const allModels = [
           "update",
           "delete",
         ],
-        frontend: ["list", "view", "update", "delete", "create"],
+        frontend: ["list", "view", "delete", "create"],
         valueGetter: () => {
           return "";
         },

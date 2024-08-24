@@ -4,7 +4,14 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Info, Loader, Pencil, Trash } from "lucide-react";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -43,7 +50,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
   if (failed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
-        <p className="text-destructive text-2xl font-semibold">
+        <p className="text-destructive text-xl font-medium">
           Failed to get data!
         </p>
       </div>
@@ -62,8 +69,8 @@ export const ViewClass = ({ modelSlug, id }: any) => {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
         <div className="flex flex-row space-x-2 items-center justify-center">
-          <Info className="h-8 w-8 text-muted-foreground" />
-          <p className="text-2xl text-muted-foreground">
+          <Info className="h-6 w-6 text-muted-foreground" />
+          <p className="text-xl text-muted-foreground">
             This page doesn&apos;t exist!
           </p>
         </div>
@@ -95,7 +102,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
       </Breadcrumb>
 
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <p className="text-lg sm:text-xl text-muted-foreground">
+        <p className="text-base sm:text-lg text-muted-foreground">
           {isoToDate(data?.createdAt)}
         </p>
         <div className="flex flex-row space-x-2 mt-2 sm:mt-0">
@@ -116,7 +123,7 @@ export const ViewClass = ({ modelSlug, id }: any) => {
         </div>
       </div>
 
-      <p className="text-4xl sm:text-5xl font-semibold mb-2">{data.name}</p>
+      <p className="text-lg sm:text-3xl font-medium mb-2">{data.name}</p>
       <Separator className="my-4" />
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-10">
@@ -128,26 +135,26 @@ export const ViewClass = ({ modelSlug, id }: any) => {
           className="sm:w-32 sm:h-32 rounded-full"
         />
         <div className="sm:flex-1">
-          <p className="text-lg font-semibold">
+          <p className="text-base font-medium">
             Duration: {data.duration} {data.duration > 1 ? 'months' : 'month'}
           </p>
-          <p className="text-lg font-semibold">
+          <p className="text-base font-medium">
             Remaining: {calculateRemainingDays(data?.createdAt, data?.duration)} days
           </p>
           <MarkdownViewer content={data?.descriptiton} customClassName="border p-2" />
         </div>
       </div>
 
-      <p className="text-lg text-muted-foreground mb-10">
+      <p className="text-base text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
 
       <Tabs defaultValue="lecture" className="w-full">
         <TabsList className="w-full border-b border-muted">
-          <TabsTrigger value="lecture" className="flex-1 text-center py-2">
+          <TabsTrigger value="lecture" className="flex-1 text-center py-2 text-sm">
             Lecture
           </TabsTrigger>
-          <TabsTrigger value="students" className="flex-1 text-center py-2">
+          <TabsTrigger value="students" className="flex-1 text-center py-2 text-sm">
             Students
           </TabsTrigger>
         </TabsList>

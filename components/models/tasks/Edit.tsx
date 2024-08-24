@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import { Button } from "@/components/ui/button";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const TaskEdit = ({ model, id, callbackFn }: any) => {
+  useAdminCheck();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);

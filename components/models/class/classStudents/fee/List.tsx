@@ -1,4 +1,5 @@
 "use client";
+
 import React, { Fragment, useEffect, useState } from "react";
 import {
   Card,
@@ -14,10 +15,17 @@ import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "@/components/models/FilterTools";
 import { Badge } from "@/components/ui/badge";
-import { useStudentId } from "@/lib/hooks/studentId-get";
+import { FeeEdit } from "./Edit";
+import { useReadLocalStorage } from "usehooks-ts";
+
+const statusStyles: any = {
+  SUBMITTED: "bg-green-100 text-green-800",
+  NOT_SUBMITTED: "bg-red-300 text-red-800",
+  LATE_SUBMITTED: "bg-yellow-100 text-yellow-800",
+};
 
 export const ListStudentsFee = ({ modelSlug, id }: any) => {
-  const studentId = useStudentId();
+  const studentId = useReadLocalStorage("studentId");
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&${
       id ? `eq=true&fields=classToStudentId&classToStudentId=${id}` : ""
@@ -36,10 +44,7 @@ export const ListStudentsFee = ({ modelSlug, id }: any) => {
   const [model, setModel] = useState<any>({});
 
   useEffect(() => {
-    console.log();
     setModel(allModels.find((model) => model.model === modelSlug));
-    // const schema =  model.fields.filter((field: any) => field.frontend.includes("findMany"));
-    // console.log(schema);
 
     const fields = model.searchConfig?.searchFields;
     const sortField = model.searchConfig?.sortField;
@@ -84,54 +89,45 @@ export const ListStudentsFee = ({ modelSlug, id }: any) => {
   }
 
   return (
-    <div className="mt-10 max-w-5xl mx-auto px-2">
+    <div className="mt-10 max-w-5xl mx-auto px-4">
       {model?.name && (
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center space-x-4">
-            <p className="text-5xl  font-semibold capitalize">{model.name}</p>
-            {/* build search query in url for next pages also */}
-            {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
+            <p className="text-4xl font-semibold capitalize">{model.name}</p>
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
-         {!studentId && (
-           <Link
-           href={`/${prePath}/${modelSlug}/create${
-             id ? `?classToStudentId=${id}` : ""}`}
-           className={buttonVariants({ variant: "default", size: "sm" })}
-         >
-           <Plus className="h-5 w-5" />
-         </Link>
-         )}
+          {!studentId && (
+            <Link
+              href={`/${prePath}/${modelSlug}/create${id ? `?classToStudentId=${id}` : ""}`}
+              className={buttonVariants({ variant: "default", size: "sm" })}
+            >
+              <Plus className="h-5 w-5" />
+            </Link>
+          )}
         </div>
       )}
 
       <div className="my-10 space-y-4">
         {data?.map((item: any) => (
           <Fragment key={item.id}>
-            <Card key={item.id}>
+            <Card key={item.id} className="hover:shadow-lg transition-shadow duration-300">
               <CardHeader className="group flex flex-row justify-between items-start">
-                <Link
+                {/* <Link
                   className="flex flex-col space-y-2 cursor-pointer w-full"
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
-                >
-                  <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
+                > */}
+                  <CardTitle className="capitalize flex flex-row items-center space-x-2 group-hover:underline">
                     <span>{item.month}</span>
-                    <Badge
-                      variant={
-                        item.status === "NOT_SUBMITTED"
-                          ? "destructive"
-                          : "default"
-                      }
-                    >
+                    <Badge className={statusStyles[item.status]}>
                       {item.status}
                     </Badge>
-                    <MoveRight className=" opacity-75" />
+                    {/* <MoveRight className="opacity-75" /> */}
                   </CardTitle>
-                  <CardDescription className=" line-clamp-3 ">
+                  <CardDescription className="line-clamp-3">
                     {item[model.meta.description]}
                   </CardDescription>
                   <div className="flex flex-row space-x-4 items-center">
-                    <p className="text-sm text-muted-foreground ">
+                    <p className="text-sm text-muted-foreground">
                       {isoToDate(item?.dueDate)}
                     </p>
                     {item?.status === "SUBMITTED" && (
@@ -140,28 +136,13 @@ export const ListStudentsFee = ({ modelSlug, id }: any) => {
                       </p>
                     )}
                   </div>
-                </Link>
+                {/* </Link> */}
 
-               {!studentId && (
-               <div className="flex flex-row items-center justify-end space-x-2">
-               <Link
-                 href={`/${prePath}/${modelSlug}/edit/${item.id}`}
-                 className={cn(
-                   buttonVariants({ variant: "default", size: "sm" })
-                 )}
-               >
-                 <Pencil className="h-4 w-4" />
-               </Link>
-               <Link
-                 href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
-                 className={cn(
-                   buttonVariants({ variant: "default", size: "sm" })
-                 )}
-               >
-                 <Trash className="h-4 w-4" />
-               </Link>
-             </div>
-               )}
+                {!studentId && (
+                  <div className="flex flex-row items-center justify-end space-x-2">
+                    <FeeEdit id={item.id} model={allModels.find((model) => model.model === "fee")} />
+                  </div>
+                )}
               </CardHeader>
             </Card>
           </Fragment>

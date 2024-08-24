@@ -10,7 +10,7 @@ export const useLogin = () => {
       location.href = "/main";
     }
     if(studentId){
-      location.href = "/main/student/view" + studentId;
+      location.href = "/main/student/view/" + studentId;
     }
   }, [studentId, teacherId]);
 };

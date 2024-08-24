@@ -15,18 +15,8 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const CreateStudentsInClasses = ({
   model,
@@ -35,6 +25,7 @@ export const CreateStudentsInClasses = ({
   page,
   id,
 }: any) => {
+  useAdminCheck();
   const [students, setStudents] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
@@ -47,23 +38,15 @@ export const CreateStudentsInClasses = ({
   useEffect(() => {
     axios
       .get("/api/v1/dynamic/student")
-      .then((resp: any) => {
-        setStudents(resp.data);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+      .then((resp: any) => setStudents(resp.data))
+      .catch((err: any) => console.log(err));
   }, []);
 
   useEffect(() => {
     axios
       .get("/api/v1/dynamic/class")
-      .then((resp: any) => {
-        setClasses(resp.data);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+      .then((resp: any) => setClasses(resp.data))
+      .catch((err: any) => console.log(err));
   }, []);
 
   useEffect(() => {
@@ -88,10 +71,7 @@ export const CreateStudentsInClasses = ({
           data[field.slug] === undefined || data[field.slug] === ""
       );
       if (isEmptyRecord) {
-        alert(`Please fill all required fields. 
-            ${JSON.stringify(
-              requiredFields?.map((field: any) => field.name)
-            )}`);
+        alert(`Please fill all required fields: ${requiredFields.map((field: any) => field.name).join(", ")}`);
         return;
       }
     }
@@ -199,134 +179,65 @@ export const CreateStudentsInClasses = ({
         setData={setData}
         action={"create"}
       />
-      {/* <div className="flex flex-col sm:flex-row gap-4 justify-between">
-        <h1>Select Student</h1>
-        <Select
-          onValueChange={(e) =>
-            setData({
-              ...data,
-              student: {
-                connect: {
-                  id: e,
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold mb-2">Select Student</h2>
+          <Select
+            onValueChange={(e) =>
+              setData({
+                ...data,
+                student: {
+                  connect: {
+                    id: e,
+                  },
                 },
-              },
-            })
-          }
-        >
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Select Student" />
-          </SelectTrigger>
-          <SelectContent>
-            {students.map((option: any) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex flex-col sm:flex-row gap-4 justify-between">
-        <h1>Select Class</h1>
-        <Select
-          defaultValue={id}
-          onValueChange={(e) =>
-            setData({
-              ...data,
-              class: {
-                connect: {
-                  id: e,
+              })
+            }
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Select Student" />
+            </SelectTrigger>
+            <SelectContent>
+              {students.map((option: any) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold mb-2">Select Class</h2>
+          <Select
+            defaultValue={id}
+            onValueChange={(e) =>
+              setData({
+                ...data,
+                class: {
+                  connect: {
+                    id: e,
+                  },
                 },
-              },
-            })
-          }
-        >
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Select Student" />
-          </SelectTrigger>
-          <SelectContent>
-            {classes.map((option: any) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div> */}
-      <div className="mt-10">
-        <Popover>
-          <PopoverTrigger className="w-full">
-            <Command className="w-full">
-              <CommandInput
-                placeholder="Type a class or search..."
-                className="rounded-t-lg"
-              />
-              <PopoverContent className="max-h-60 w-full overflow-auto">
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandList>
-                  {classes.map((option: any) => (
-                    <CommandItem
-                      key={option.id}
-                      value={option.id}
-                      defaultValue={id}
-                      onSelect={() => {
-                        setData({
-                          ...data,
-                          class: {
-                            connect: {
-                              id: option.id,
-                            },
-                          },
-                        });
-                      }}
-                    >
-                      {option.name}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </PopoverContent>
-            </Command>
-          </PopoverTrigger>
-        </Popover>
-      </div>
-      <div className="mt-10">
-        <Popover>
-          <PopoverTrigger className="w-full">
-            <Command className="w-full">
-              <CommandInput
-                placeholder="Type a class or search..."
-                className="rounded-t-lg"
-              />
-              <PopoverContent className="max-h-60 w-full overflow-auto">
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandList>
-                  {students.map((option: any) => (
-                    <CommandItem
-                      key={option.id}
-                      value={option.id}
-                      onSelect={() => {
-                        setData({
-                          ...data,
-                          student: {
-                            connect: {
-                              id: option.id,
-                            },
-                          },
-                        });
-                      }}
-                    >
-                      {option.name}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </PopoverContent>
-            </Command>
-          </PopoverTrigger>
-        </Popover>
+              })
+            }
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Select Class" />
+            </SelectTrigger>
+            <SelectContent>
+              {classes.map((option: any) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <Button
         onClick={() => createRecord()}
         disabled={creating || createSuccess || createFail}
-        className="w-full sm:w-auto"
+        className="w-full sm:w-auto mt-4"
       >
         {creating && <Loader className="h-4 w-4 mr-2 animate-spin" />}
         {creating ? (

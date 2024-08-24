@@ -13,10 +13,10 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "../../FilterTools";
-import { useStudentId } from "@/lib/hooks/studentId-get";
 import { Badge } from "@/components/ui/badge";
+import { useReadLocalStorage } from "usehooks-ts";
 export const ListClassStudents = ({ modelSlug, id }: any) => {
-  const studentId = useStudentId();
+  const studentId = useReadLocalStorage("studentId");
 
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&${id ? `eq=true&fields=classId&classId=${id}` : ""
@@ -30,7 +30,6 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
     modelSlug,
     searchQuery,
   });
-  
 
 
   const [loading, setLoading] = useState(true);
@@ -83,20 +82,21 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
   return (
     <div className="mt-10 max-w-5xl mx-auto px-2">
       {model?.name && (
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row items-center space-x-4">
-            <p className="text-5xl  font-semibold capitalize">{model.name}</p>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+          <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-4">
+            <p className="text-4xl font-semibold capitalize">{model.name}</p>
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
-          {!studentId && (
-            <Link
-              href={`/${prePath}/${modelSlug}/create${id ? `?classId=${id}` : ""
-                }`}
-              className={buttonVariants({ variant: "default", size: "sm" })}
-            >
-              <Plus className="h-5 w-5" />
-            </Link>
-          )}
+
+          <Link
+            href={`/${prePath}/${modelSlug}/create${id ? `?classId=${id}` : ""
+              }`}
+            className={buttonVariants({ variant: "default", size: "sm" })}
+          >
+            <Plus className="h-5 w-5" />
+            <span className="ml-2">Add New</span>
+          </Link>
+
         </div>
       )}
 
@@ -104,22 +104,22 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
         {data?.map((item: any) => (
           <Fragment key={item.id}>
             <Card key={item.id}>
-              <CardHeader className="group flex flex-row justify-between items-start">
+              <CardHeader className="group flex flex-col md:flex-row justify-between items-start p-4 rounded-md border">
                 <Link
                   className="flex flex-col space-y-2 cursor-pointer w-full"
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
                   <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
-                    {studentId === item.student.id && <Badge className="bg-green-500">Me</Badge>}
                     <span>{item.student.name}</span>
+                    <Badge variant={"outline"}>{item?.class?.name}</Badge>
                     <MoveRight className=" opacity-75" />
                   </CardTitle>
-                  <CardDescription className=" line-clamp-3 ">
+                  <CardDescription className="line-clamp-3">
                     {item[model.meta.description]}
                   </CardDescription>
-                  <div className="flex flex-row space-x-4 items-center">
-                    <p className="text-sm text-muted-foreground ">
-                      {isoToDate(item?.joinDate)}
+                  <div className="flex flex-row space-x-4 items-center mt-2">
+                    <p className="text-sm text-muted-foreground">
+                      Joined on {isoToDate(item?.joinDate)}
                     </p>
                     {item?.updatedAt !== item?.createdAt && (
                       <p className="text-sm text-muted-foreground underline">
@@ -129,26 +129,26 @@ export const ListClassStudents = ({ modelSlug, id }: any) => {
                   </div>
                 </Link>
 
-                {!studentId && (
-                  <div className="flex flex-row items-center justify-end space-x-2">
-                    <Link
-                      href={`/${prePath}/${modelSlug}/edit/${item.id}`}
-                      className={cn(
-                        buttonVariants({ variant: "default", size: "sm" })
-                      )}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Link>
-                    <Link
-                      href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
-                      className={cn(
-                        buttonVariants({ variant: "default", size: "sm" })
-                      )}
-                    >
-                      <Trash className="h-4 w-4" />
-                    </Link>
-                  </div>
-                )}
+
+                <div className="flex flex-row items-center justify-end space-x-2 mt-4 md:mt-0">
+                  <Link
+                    href={`/${prePath}/${modelSlug}/edit/${item.id}`}
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "sm" })
+                    )}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "sm" })
+                    )}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Link>
+                </div>
+
               </CardHeader>
             </Card>
           </Fragment>

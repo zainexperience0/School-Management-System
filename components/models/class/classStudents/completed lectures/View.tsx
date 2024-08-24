@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { ListCompletedTasks } from "./taskCompleted/List";
 
 export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
+
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
         setFailed(true);
       });
   };
+
 
   if (failed) {
     return (
@@ -120,7 +122,7 @@ export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
         Updated {timeAgo(data?.updatedAt)}
       </p>
       <div>
-        <ListCompletedTasks modelSlug={"taskCompleted"} id={data.id}/>
+        <ListCompletedTasks modelSlug={"taskCompleted"} lecture_id={id} />
       </div>
     </div>
   );

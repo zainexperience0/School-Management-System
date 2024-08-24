@@ -19,12 +19,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { ListStudentsFee } from "./fee/List";
 import { ListCompletedLectures } from "./completed lectures/List";
+import { MarkdownViewer } from "@/components/customView/markdown";
+import { Badge } from "@/components/ui/badge";
+import { useReadLocalStorage } from "usehooks-ts";
 
 export const ViewStudentInClass = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+  const student_id = useReadLocalStorage("studentId");
+
 
   useEffect(() => {
     setModel(allModels.find((model: any) => model.model === modelSlug));
@@ -43,10 +48,12 @@ export const ViewStudentInClass = ({ modelSlug, id }: any) => {
       });
   };
 
+  console.log(data);
+
   if (failed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
-        <p className="text-destructive text-2xl font-semibold">
+        <p className="text-destructive text-lg font-semibold">
           Failed to get data!
         </p>
       </div>
@@ -65,8 +72,8 @@ export const ViewStudentInClass = ({ modelSlug, id }: any) => {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
         <div className="flex flex-row space-x-2 items-center justify-center">
-          <Info className="h-8 w-8 text-muted-foreground" />
-          <p className="text-2xl text-muted-foreground">
+          <Info className="h-6 w-6 text-muted-foreground" />
+          <p className="text-lg text-muted-foreground">
             This page doesn&apos;t exist!
           </p>
         </div>
@@ -82,8 +89,8 @@ export const ViewStudentInClass = ({ modelSlug, id }: any) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto my-10 px-4">
-      <Breadcrumb className="mb-5">
+    <div className="max-w-5xl mx-auto my-8 px-4 rounded-md">
+      <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href={`/${prePath}/${modelSlug}`}>
@@ -96,67 +103,70 @@ export const ViewStudentInClass = ({ modelSlug, id }: any) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <p className="text-lg sm:text-xl text-muted-foreground">
-          {isoToDate(data?.joinDate)}
-        </p>
-        <div className="flex flex-row space-x-2 mt-2 sm:mt-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 p-4 border-b">
+        <div className="flex items-center space-x-3">
+          <Image
+            src={data?.student.image}
+            alt={data?.student.name}
+            width={80}
+            height={80}
+            className="rounded-full border"
+          />
+          <div>
+            <p className="text-xl font-semibold">{data.student.name}</p>
+            <p className="text-sm text-muted-foreground">{data.student.email}</p>
+
+            <Badge>{data.class.name}</Badge>
+            <MarkdownViewer content={data.class.descriptiton} customClassName="border p-2 rounded-md" />
+          </div>
+        </div>
+        {!student_id && (
+          <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row space-x-2">
           <Link
             href={`/${prePath}/${modelSlug}/edit/${data.id}`}
             className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
           >
-            <Pencil className="h-4 w-4 mr-2" />
+            <Pencil className="h-4 w-4 mr-1" />
             Update
           </Link>
           <Link
             href={`/${prePath}/${modelSlug}/delete/${data.id}`}
             className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
           >
-            <Trash className="h-4 w-4 mr-2" />
+            <Trash className="h-4 w-4 mr-1" />
             Delete
           </Link>
         </div>
+        )}
       </div>
-      <p className="text-4xl sm:text-5xl font-semibold mb-2">{data.name}</p>
-      <Separator className="my-4" />
-      <p className="text-lg text-muted-foreground mb-10">
-        Updated {timeAgo(data?.updatedAt)}
-      </p>
-
-      <div className="text-center">
-        <Image
-          src={data?.student.image}
-          alt={data?.name}
-          width={200}
-          height={200}
-          className="rounded-full mx-auto"
-        />
-        <p className="text-sm text-muted-foreground mt-2">
-          {data?.student.email}
+      <div className="p-4">
+        <p className="text-sm text-muted-foreground mb-2">
+          Joined on {isoToDate(data?.joinDate)}
         </p>
-        <p className="text-sm mt-2">Phone: {data?.student.phone}</p>
-        <p className="font-bold">{data.class.name}</p>
+        <p className="text-sm text-muted-foreground mb-4">
+          Last Updated: {timeAgo(data?.updatedAt)}
+        </p>
+        <Separator className="my-4" />
+        <Tabs defaultValue="fee" className="w-full">
+          <TabsList className="w-full border-b border-muted">
+            <TabsTrigger value="fee" className="flex-1 text-center py-2">
+              Fee
+            </TabsTrigger>
+            <TabsTrigger
+              value="lecturesCompleted"
+              className="flex-1 text-center py-2"
+            >
+              Lectures Completed
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="fee">
+            <ListStudentsFee modelSlug="fee" id={data?.id} />
+          </TabsContent>
+          <TabsContent value="lecturesCompleted">
+            <ListCompletedLectures modelSlug={"lectureCompleted"} student_id={data?.id} />
+          </TabsContent>
+        </Tabs>
       </div>
-
-      <Tabs defaultValue="fee" className="w-full">
-        <TabsList className="w-full border-b border-muted">
-          <TabsTrigger value="fee" className="flex-1 text-center py-2">
-            Fee
-          </TabsTrigger>
-          <TabsTrigger
-            value="lecturesCompleted"
-            className="flex-1 text-center py-2"
-          >
-           Lectures Completed
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="fee">
-        <ListStudentsFee modelSlug="fee" id={data?.id} />
-        </TabsContent>
-        <TabsContent value="lecturesCompleted">
-        <ListCompletedLectures modelSlug={"lectureCompleted"} student_id={data?.id}/>
-        </TabsContent>
-      </Tabs>
     </div>
   );
 };

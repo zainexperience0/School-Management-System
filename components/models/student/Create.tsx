@@ -24,8 +24,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const RegisterStudent = ({ model, callbackFn, relation, page }: any) => {
+  useAdminCheck();
   const [socialLinks, setSocialLinks] = useState<any>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);

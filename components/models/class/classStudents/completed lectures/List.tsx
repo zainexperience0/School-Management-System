@@ -13,9 +13,10 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "@/components/models/FilterTools";
-import { useStudentId } from "@/lib/hooks/studentId-get";
+import { useReadLocalStorage } from "usehooks-ts";
+import { Badge } from "@/components/ui/badge";
 export const ListCompletedLectures = ({ modelSlug, student_id }: any) => {
-  const studentid = useStudentId();
+  const studentId = useReadLocalStorage("studentId");
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&${student_id ? `eq=true&fields=classToStudentId&classToStudentId=${student_id}` : ""
     }&sortfield=${allModels.find((model) => model.model === modelSlug)?.searchConfig
@@ -27,9 +28,6 @@ export const ListCompletedLectures = ({ modelSlug, student_id }: any) => {
     modelSlug,
     searchQuery,
   });
-
-  
-  
 
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
@@ -86,23 +84,21 @@ export const ListCompletedLectures = ({ modelSlug, student_id }: any) => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center space-x-4">
             <p className="text-5xl  font-semibold capitalize">{model.name}</p>
-            {/* build search query in url for next pages also */}
-            {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
-          {!studentid && (
+         
             <Link
-              href={`/${prePath}/${modelSlug}/create${student_id ? `?student_id=${student_id}` : ""}`}
-              className={buttonVariants({ variant: "default", size: "sm" })}
-            >
-              <Plus className="h-5 w-5" />
-            </Link>
-          )}
+            href={`/${prePath}/${modelSlug}/create${student_id ? `?student_id=${student_id}` : ""}`}
+            className={buttonVariants({ variant: "default", size: "sm" })}
+          >
+            <Plus className="h-5 w-5" />
+          </Link>
+          
         </div>
       )}
 
       <div className="my-10 space-y-4">
-        {data?.filter((item: any) => item.canView === true).map((item: any) => (
+        {data?.map((item: any) => (
           <Fragment key={item.id}>
             <Card key={item.id}>
               <CardHeader className="group flex flex-row justify-between items-start">
@@ -111,7 +107,10 @@ export const ListCompletedLectures = ({ modelSlug, student_id }: any) => {
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
                   <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
-                    <span>{item.status}</span>
+                    <span>{item.lecture.name}</span>
+                    <Badge className={cn("text-xs",
+                      item.status === "COMPLETED" ? "bg-green-500" : "bg-red-400"
+                    )}>{item.status}</Badge>
                     <MoveRight className=" opacity-75" />
                   </CardTitle>
                   <CardDescription className=" line-clamp-3 ">
@@ -129,26 +128,28 @@ export const ListCompletedLectures = ({ modelSlug, student_id }: any) => {
                   </div>
                 </Link>
 
-                {!studentid && (
+
+              {!studentId && (
                   <div className="flex flex-row items-center justify-end space-x-2">
-                    <Link
-                      href={`/${prePath}/${modelSlug}/edit/${item.id}`}
-                      className={cn(
-                        buttonVariants({ variant: "default", size: "sm" })
-                      )}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Link>
-                    <Link
-                      href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
-                      className={cn(
-                        buttonVariants({ variant: "default", size: "sm" })
-                      )}
-                    >
-                      <Trash className="h-4 w-4" />
-                    </Link>
-                  </div>
-                )}
+                  <Link
+                    href={`/${prePath}/${modelSlug}/edit/${item.id}`}
+                    className={cn(
+                      buttonVariants({ variant: "default", size: "sm" })
+                    )}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
+                    className={cn(
+                      buttonVariants({ variant: "default", size: "sm" })
+                    )}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Link>
+                </div>
+
+              )}
               </CardHeader>
             </Card>
           </Fragment>

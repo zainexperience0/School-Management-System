@@ -78,7 +78,7 @@ export const TasksCompletedEdit = ({ model, id, callbackFn }: any) => {
 
   const fetchData = () => {
     axios
-      .get(`/api/v1/dynamic/${model.model}/${id}`)
+      .get(`/api/v1/dynamic/${model.model}/${id}?purpose=edit`)
       .then((resp: any) => {
         setData(resp.data);
         setLoading(false);

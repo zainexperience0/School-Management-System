@@ -16,6 +16,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MarkdownViewer } from "@/components/customView/markdown";
+import { Badge } from "@/components/ui/badge";
 
 export const ViewTaskCompleted = ({ modelSlug, id }: any) => {
   const [data, setData] = useState<any>({});
@@ -98,6 +99,7 @@ export const ViewTaskCompleted = ({ modelSlug, id }: any) => {
           {isoToDate(data?.createdAt)}
         </p>
         <div className="flex flex-row items-center justify-end space-x-2">
+          <Badge>{data?.status}</Badge>
           <Link
             href={`/${prePath}/${modelSlug}/edit/${data.id}`}
             className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}

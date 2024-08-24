@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/card";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
 import { useMainData } from "@/lib/hooks/getMaindata";
-import { useTeacherId } from "@/lib/hooks/teacherId-get";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useReadLocalStorage } from "usehooks-ts";
 
 const MainPage = () => {
   const {
@@ -23,7 +23,7 @@ const MainPage = () => {
     loading,
     error,
   } = useMainData();
-  const teacherId: any = useTeacherId();
+  const teacherId: any = useReadLocalStorage("teacherId");
 
   useAdminCheck();
 

@@ -129,7 +129,7 @@ export const FeeCreate = ({
 
   if (!model) {
     return (
-      <div className="mt-10 max-w-5xl mx-auto text-center">
+      <div className="mt-10 max-w-4xl mx-auto text-center">
         <p className="text-destructive text-2xl font-semibold">
           Page not found!
         </p>
@@ -139,13 +139,13 @@ export const FeeCreate = ({
 
   if (isRelational) {
     return (
-      <div className="mt-10 max-w-5xl mx-auto text-center space-y-4">
+      <div className="mt-10 max-w-4xl mx-auto text-center space-y-4">
         <p className="text-destructive text-2xl font-semibold">
           Relational records cannot be created manually!
         </p>
         <Link
           href={`/${prePath}/${model.model}`}
-          className={buttonVariants({ variant: "outline" })}
+          className={buttonVariants({ variant: "outline", size: "sm" })}
         >
           <ArrowLeft className="mr-2 w-4 h-4" />
           Go back
@@ -156,19 +156,19 @@ export const FeeCreate = ({
 
   if (loading) {
     return (
-      <div className="mt-10 max-w-5xl mx-auto text-center">
-        <Loader className="mx-auto animate-spin" />
+      <div className="mt-10 max-w-4xl mx-auto text-center">
+        <Loader className="mx-auto animate-spin h-8 w-8 text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto my-10 px-4 space-y-6">
+    <div className="max-w-5xl mx-auto my-10 px-6 py-8 space-y-4">
       {page && (
-        <Breadcrumb className="mb-5">
+        <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${prePath}/${model.model}`}>
+              <BreadcrumbLink href={`/${prePath}/${model.model}`} className="text-primary">
                 {model.name}
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -179,7 +179,7 @@ export const FeeCreate = ({
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 items-start">
         <Select
           defaultValue={student_id} // Set the default value to the passed id
           onValueChange={(e) =>
@@ -193,7 +193,7 @@ export const FeeCreate = ({
             })
           }
         >
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Select Student" />
           </SelectTrigger>
           <SelectContent>
@@ -211,11 +211,10 @@ export const FeeCreate = ({
         setData={setData}
         action={"create"}
       />
-
       <Button
         onClick={() => createRecord()}
         disabled={creating || createSuccess || createFail}
-        className="w-full sm:w-auto"
+        className="w-full sm:w-auto bg-primary"
       >
         {creating && <Loader className="h-4 w-4 mr-2 animate-spin" />}
         {creating ? (

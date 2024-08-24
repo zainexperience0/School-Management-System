@@ -37,6 +37,7 @@ import { LectureCompletedEdit } from "@/components/models/class/classStudents/co
 import { ClassToStudentEdit } from "@/components/models/class/classStudents/Edit";
 import { LectureEdit } from "@/components/models/lecture/Edit";
 import { ViewTaskCompleted } from "@/components/models/class/classStudents/completed lectures/taskCompleted/View";
+import { ViewTask } from "@/components/models/tasks/View";
 
 const DynamicPage = ({ params, searchParams }: any) => {
   const dynamicParameters = params.fields || [];
@@ -68,6 +69,9 @@ const DynamicPage = ({ params, searchParams }: any) => {
       }
       if (model === "taskCompleted") {
         return <ViewTaskCompleted modelSlug={model} id={fieldId} />;
+      }
+      if(model === "task"){
+        return <ViewTask modelSlug={model} id={fieldId} />
       }
       if (fieldId && !["edit", "delete"].includes(action)) {
         return <ViewField modelSlug={model} id={fieldId} />;

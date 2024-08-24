@@ -15,8 +15,10 @@ import { FilterTools } from "../FilterTools";
 import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useReadLocalStorage } from "usehooks-ts";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const ListStudents = ({ modelSlug }: any) => {
+  useAdminCheck();
   const studentId = useReadLocalStorage("studentId");
 
   if (studentId) {

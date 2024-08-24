@@ -6,7 +6,7 @@ const MainLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <div>
         <Navbar/>
-        <main className='mt-20'>
+        <main className='mt-10'>
             {children}
         </main>
     </div>

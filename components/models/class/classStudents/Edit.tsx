@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import { Button } from "@/components/ui/button";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const ClassToStudentEdit = ({ model, id, callbackFn }: any) => {
+  useAdminCheck();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,8 +39,8 @@ export const ClassToStudentEdit = ({ model, id, callbackFn }: any) => {
       if (isEmptyRecord) {
         alert(`Please fill all required fields. 
             ${JSON.stringify(
-              requiredFields?.map((field: any) => field.name)
-            )}`);
+          requiredFields?.map((field: any) => field.name)
+        )}`);
         return;
       }
     }
@@ -63,7 +65,7 @@ export const ClassToStudentEdit = ({ model, id, callbackFn }: any) => {
         setEditFail(true);
       });
   };
-  
+
   const resetFields = () => {
     setEditing(false);
     setEditSuccess(false);

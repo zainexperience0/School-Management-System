@@ -17,9 +17,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListTasks } from "../tasks/List";
-import { ListCompletedTasks } from "../class/classStudents/completed lectures/taskCompleted/List";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const ViewLecture = ({ modelSlug, id }: any) => {
+  useAdminCheck();
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -126,19 +127,12 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
           <TabsTrigger value="tasks" className="flex-1 text-center py-2">
             Tasks
           </TabsTrigger>
-          <TabsTrigger
-            value="taskCompleted"
-            className="flex-1 text-center py-2"
-          >
-            TasksCompleted
-          </TabsTrigger>
+
         </TabsList>
         <TabsContent value="tasks">
           <ListTasks modelSlug={"task"} lecture_id={data.id} />
         </TabsContent>
-        <TabsContent value="taskCompleted">
-          <ListCompletedTasks modelSlug={"taskCompleted"} lecture_id={data?.id}/>
-        </TabsContent>
+
       </Tabs>
     </div>
   );

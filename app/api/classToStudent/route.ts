@@ -15,6 +15,7 @@ export async function POST(req: any, res: any) {
           select: {
             id: true,
             name: true,
+            lectures: true,
           },
         },
       },

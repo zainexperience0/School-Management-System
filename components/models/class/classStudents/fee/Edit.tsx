@@ -1,30 +1,35 @@
 "use client";
-import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { CheckCircle, Loader } from "lucide-react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { InputWrapper } from "@/components/custom/inputWrapper";
-import { Button } from "@/components/ui/button";
+import { Loader, CheckCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const FeeEdit = ({ model, id, callbackFn }: any) => {
-
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
-
   const [editing, setEditing] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
   const [editFail, setEditFail] = useState(false);
 
-  const updateRecord = () => {
+  useEffect(() => {
+    fetchData();
+  }, [id, model]);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const resp = await axios.get(`/api/v1/dynamic/${model.model}/${id}`);
+      setData(resp.data);
+    } catch (error) {
+      setFailed(true);
+      console.error("Failed to fetch data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdate = async () => {
     const requiredFields = model.fields?.filter(
       (field: any) => field.required && field.dataType !== "relation"
     );
@@ -35,64 +40,47 @@ export const FeeEdit = ({ model, id, callbackFn }: any) => {
           data[field.slug] === undefined || data[field.slug] === ""
       );
       if (isEmptyRecord) {
-        alert(`Please fill all required fields. 
-            ${JSON.stringify(
-              requiredFields?.map((field: any) => field.name)
-            )}`);
+        alert(`Please fill all required fields: 
+            ${requiredFields.map((field: any) => field.name).join(", ")}`);
         return;
       }
     }
 
     setEditing(true);
-    axios
-      .put(`/api/v1/dynamic/${model.model}/${id}`, data)
-      .then((resp: any) => {
-        setEditing(false);
-        setEditSuccess(true);
-        setTimeout(() => {
-          resetFields();
-          if (!callbackFn) {
-            window.history.back();
-          } else {
-            callbackFn();
-          }
-        }, 2000);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        setEditFail(true);
-      });
+    try {
+      await axios.put(`/api/v1/dynamic/${model.model}/${id}`, data);
+      setEditSuccess(true);
+      setTimeout(() => {
+        resetFields();
+        if (!callbackFn) {
+          window.location.reload();
+        } else {
+          callbackFn();
+        }
+      }, 2000);
+    } catch (err) {
+      console.error("Update failed:", err);
+      setEditFail(true);
+    } finally {
+      setEditing(false);
+    }
   };
-  
+
+  const handleStatusChange = (value: string) => {
+    setData((prevData: any) => ({ ...prevData, status: value }));
+    handleUpdate();
+  };
+
   const resetFields = () => {
     setEditing(false);
     setEditSuccess(false);
     setEditFail(false);
-    // setData([]);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = () => {
-    axios
-      .get(`/api/v1/dynamic/${model.model}/${id}`)
-      .then((resp: any) => {
-        setData(resp.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setFailed(true);
-      });
   };
 
   if (!model) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
-        <p className="text-destructive text-2xl font-semibold">
-          Page not found!
-        </p>
+        <p className="text-destructive text-2xl font-semibold">Page not found!</p>
       </div>
     );
   }
@@ -100,9 +88,7 @@ export const FeeEdit = ({ model, id, callbackFn }: any) => {
   if (failed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
-        <p className="text-destructive text-2xl font-semibold">
-          Failed to get data!
-        </p>
+        <p className="text-destructive text-2xl font-semibold">Failed to get data!</p>
       </div>
     );
   }
@@ -116,34 +102,30 @@ export const FeeEdit = ({ model, id, callbackFn }: any) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto my-10 px-2">
-      <Breadcrumb className="mb-5">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/${prePath}/${model.model}`}>
-              {model.name}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Edit {model.name}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <InputWrapper model={model} data={data} setData={setData} action={"update"} />
-      <Button
-        onClick={() => {
-          updateRecord();
-        }}
-        disabled={editing || editFail || editSuccess}
+    <div className="max-w-5xl  my-10 px-2">
+      <Select
+        value={data?.status || ""}
+        onValueChange={handleStatusChange}
+        disabled={editing} // Disable Select during editing
       >
-        {editing && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-        {editing && "Saving..."}
-        {!editing && !editSuccess && !editFail && "Save changes"}
-        {editSuccess && <CheckCircle className="h-4 w-4 mr-2" />}
-        {editSuccess && `${model.name} saved!`}
-        {editFail && "Failed to update!"}
-      </Button>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder={"Select Status"} />
+        </SelectTrigger>
+        <SelectContent className="w-full">
+          {!editing && (
+            <>
+              <SelectItem value="SUBMITTED">Submitted</SelectItem>
+              <SelectItem value="NOT_SUBMITTED">Not Submitted</SelectItem>
+              <SelectItem value="LATE_SUBMITTED">Late Submitted</SelectItem>
+            </>
+          )}
+          {editing && <Loader className="h-4 w-4 mr-2 animate-spin" />}
+          {editing && "Saving..."}
+          {editSuccess && <CheckCircle className="h-4 w-4 mr-2" />}
+          {editSuccess && `${model.name} saved!`}
+          {editFail && "Failed to update!"}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

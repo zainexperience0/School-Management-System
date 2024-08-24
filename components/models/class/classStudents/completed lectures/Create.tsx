@@ -1,11 +1,4 @@
 "use client";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -21,18 +14,8 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useReadLocalStorage } from "usehooks-ts";
 
 export const LectureCompleteCreate = ({
   model,
@@ -41,8 +24,8 @@ export const LectureCompleteCreate = ({
   page,
   student_id,
 }: any) => {
-  
-  const [students, setStudents] = useState<any[]>([]);
+  const studentId = useReadLocalStorage("studentId");
+  const [lectures, setLectures] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -53,9 +36,9 @@ export const LectureCompleteCreate = ({
 
   useEffect(() => {
     axios
-      .get("/api/v1/dynamic/classToStudent")
+      .post(`/api/classToStudent`, {studentId})
       .then((resp: any) => {
-        setStudents(resp.data);
+        setLectures(resp.data);
       })
       .catch((err: any) => {
         console.log(err);
@@ -64,9 +47,9 @@ export const LectureCompleteCreate = ({
         setLoading(false);
       });
   }, []);
-
-  // console.log({students});
   
+console.log({lectures});
+
 
   useEffect(() => {
     if (student_id) {
@@ -92,14 +75,14 @@ export const LectureCompleteCreate = ({
       if (isEmptyRecord) {
         alert(`Please fill all required fields. 
             ${JSON.stringify(
-              requiredFields?.map((field: any) => field.name)
-            )}`);
+          requiredFields?.map((field: any) => field.name)
+        )}`);
         return;
       }
     }
     setCreating(true);
     axios
-      .post(`/api/v1/dynamic/${model.model}`,data)
+      .post(`/api/v1/dynamic/${model.model}`, data)
       .then((resp: any) => {
         setCreating(false);
         setCreateSuccess(true);
@@ -195,49 +178,41 @@ export const LectureCompleteCreate = ({
           </BreadcrumbList>
         </Breadcrumb>
       )}
-       <div className="mt-10">
-        <Popover>
-          <PopoverTrigger className="w-full">
-            <Command className="w-full">
-              <CommandInput
-                placeholder="Type a class or search..."
-                className="rounded-t-lg"
-              />
-              <PopoverContent className="max-h-60 w-full overflow-auto">
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandList>
-                  {students.map((option: any) => (
-                    <CommandItem
-                    className="w-full"
-                      key={option.id}
-                      value={option.id}
-                      defaultValue={student_id}
-                      onSelect={() => {
-                        setData({
-                          ...data,
-                          classToStudent: {
-                            connect: {
-                              id: option.id,
-                            },
-                          },
-                        });
-                      }}
-                    >
-                      {option.student.name}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </PopoverContent>
-            </Command>
-          </PopoverTrigger>
-        </Popover>
+        <div className={`${studentId ? "hidden" : "block"}`}>
+          <InputWrapper
+          model={model}
+          data={data}
+          setData={setData}
+          action={"create"}
+        />
+        </div>
+      <div className="mt-10">
+        <Select
+          onValueChange={(e) =>
+            setData({
+              ...data,
+              lecture: {
+                connect: {
+                  id: e,
+                },
+              },
+            })
+          }
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select Lecture" />
+          </SelectTrigger>
+          <SelectContent>
+          {lectures.map((lectureClass) =>
+        lectureClass.class.lectures.map((lecture: any) => (
+          <SelectItem key={lecture.id} value={lecture.id}>
+            {lecture.name}
+          </SelectItem>
+        ))
+      )}
+          </SelectContent>
+        </Select>
       </div>
-      <InputWrapper
-        model={model}
-        data={data}
-        setData={setData}
-        action={"create"}
-      />
       <Button
         onClick={() => createRecord()}
         disabled={creating || createSuccess || createFail}

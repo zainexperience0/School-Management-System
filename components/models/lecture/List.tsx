@@ -13,7 +13,10 @@ import useInfiniteQuery from "@/lib/hooks/useQuery";
 import { cn, isoToDate, timeAgo } from "@/lib/utils";
 import { FilterTools } from "../FilterTools";
 import { buttonVariants } from "@/components/ui/button";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
+
 export const ListLecturesData = ({ modelSlug, id }: any) => {
+  useAdminCheck();
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=asc&${
       id ? `eq=true&fields=classId&classId=${id}` : ""
@@ -27,7 +30,6 @@ export const ListLecturesData = ({ modelSlug, id }: any) => {
     modelSlug,
     searchQuery,
   });
-  
 
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});
@@ -78,13 +80,11 @@ export const ListLecturesData = ({ modelSlug, id }: any) => {
   }
 
   return (
-    <div className="mt-10 max-w-5xl mx-auto px-2">
+    <div className="mt-10 max-w-5xl mx-auto px-4">
       {model?.name && (
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center mb-4">
           <div className="flex flex-row items-center space-x-4">
-            <p className="text-5xl  font-semibold capitalize">{model.name}</p>
-            {/* build search query in url for next pages also */}
-            {/* <SearchModal model={model} setSearchQuery={setSearchQuery} /> */}
+            <p className="text-3xl font-semibold capitalize">{model.name}</p>
             <FilterTools model={model} setSearchQuery={setSearchQuery} />
           </div>
           <Link
@@ -98,24 +98,28 @@ export const ListLecturesData = ({ modelSlug, id }: any) => {
         </div>
       )}
 
-      <div className="my-10 space-y-4">
-        {data?.map((item: any) => (
+      <div className="space-y-4">
+        {data?.map((item: any, index: number) => (
           <Fragment key={item.id}>
-            <Card key={item.id}>
-              <CardHeader className="group flex flex-row justify-between items-start">
+            <Card>
+              <CardHeader className="flex flex-row justify-between items-start">
                 <Link
                   className="flex flex-col space-y-2 cursor-pointer w-full"
                   href={`/${prePath}/${modelSlug}/view/${item.id}`}
                 >
-                  <CardTitle className="capitalize flex flex-row space-x-2 group-hover:underline">
-                    <span>{item[model.meta.title]}</span>
-                    <MoveRight className=" opacity-75" />
-                  </CardTitle>
-                  <CardDescription className=" line-clamp-3 ">
+                  <div className="flex flex-row items-center space-x-2">
+                    <CardTitle className="flex items-center space-x-2 group-hover:underline">
+                      <span className="text-lg font-semibold">
+                        {index + 1}. {item[model.meta.title]}
+                      </span>
+                      <MoveRight className="opacity-75" />
+                    </CardTitle>
+                  </div>
+                  <CardDescription className="line-clamp-3">
                     {item[model.meta.description]}
                   </CardDescription>
                   <div className="flex flex-row space-x-4 items-center">
-                    <p className="text-sm text-muted-foreground ">
+                    <p className="text-sm text-muted-foreground">
                       {isoToDate(item?.createdAt)}
                     </p>
                     {item?.updatedAt !== item?.createdAt && (

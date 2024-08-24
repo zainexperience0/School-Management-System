@@ -14,18 +14,9 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const CreateLecture = ({
   model,
@@ -34,7 +25,7 @@ export const CreateLecture = ({
   page,
   classId,
 }: any) => {
-  
+  useAdminCheck();
   const [classes, setClasses] = useState<any[]>([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
@@ -66,7 +57,7 @@ export const CreateLecture = ({
       }));
     }
   }, [classId]);
-  
+
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
 
@@ -77,9 +68,9 @@ export const CreateLecture = ({
       );
       if (isEmptyRecord) {
         alert(`Please fill all required fields. 
-            ${JSON.stringify(
-              requiredFields?.map((field: any) => field.name)
-            )}`);
+          ${JSON.stringify(
+          requiredFields?.map((field: any) => field.name)
+        )}`);
         return;
       }
     }
@@ -186,47 +177,37 @@ export const CreateLecture = ({
         setData={setData}
         action={"create"}
       />
-      <div className="mt-10">
-        <Popover>
-          <PopoverTrigger className="w-full">
-            <Command className="w-full">
-              <CommandInput
-                placeholder="Type a class or search..."
-                className="rounded-t-lg"
-              />
-              <PopoverContent className="max-h-60 w-full overflow-auto">
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandList>
-                  {classes.map((option: any) => (
-                    <CommandItem
-                      key={option.id}
-                      value={option.id}
-                      defaultValue={classId}
-                      onSelect={() => {
-                        setData({
-                          ...data,
-                          class: {
-                            connect: {
-                              id: option.id,
-                            },
-                          },
-                        });
-                      }}
-                    >
-                      {option.name}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </PopoverContent>
-            </Command>
-          </PopoverTrigger>
-        </Popover>
+      <div className="mt-10 flex items-center justify-between">
+        <h1>Select Class</h1>
+        <Select
+        defaultValue={classId}
+          onValueChange={(e) =>
+            setData({
+              ...data,
+              class: {
+                connect: {
+                  id: e,
+                },
+              },
+            })
+          }
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Select Class" />
+          </SelectTrigger>
+          <SelectContent>
+            {classes.map((option: any) => (
+              <SelectItem
+              key={option.id} value={option.id} className="cursor-pointer">
+                {option.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <Button
         className="mt-4 w-full sm:w-auto"
-        onClick={() => {
-          createRecord();
-        }}
+        onClick={createRecord}
         disabled={creating || createSuccess || createFail}
       >
         {creating && <Loader className="h-4 w-4 mr-2 animate-spin" />}

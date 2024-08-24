@@ -15,6 +15,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { FilterTools } from "@/components/models/FilterTools";
 import { Badge } from "@/components/ui/badge";
 export const ListCompletedTasks = ({ modelSlug, lecture_id }: any) => {
+
   const [searchQuery, setSearchQuery] = useState(
     `&sortby=desc&${lecture_id
       ? `eq=true&fields=lectureCompletedId&lectureCompletedId=${lecture_id}`
@@ -127,22 +128,16 @@ export const ListCompletedTasks = ({ modelSlug, lecture_id }: any) => {
                 </Link>
 
                 <div className="flex flex-row items-center justify-end space-x-2">
-                  <Link
-                    href={`/${prePath}/${modelSlug}/edit/${item.id}`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href={`/${prePath}/${modelSlug}/delete/${item.id}?deletekey=title`}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" })
-                    )}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Link>
+                  {!["IN_PROGRESS", "COMPLETED", "APPROVED"].includes(item.status) && (
+                    <Link
+                      href={`/${prePath}/${modelSlug}/update/${item.id}`}
+                      className={cn(
+                        buttonVariants({ variant: "default", size: "sm" })
+                      )}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Link>
+                  )}
                 </div>
               </CardHeader>
             </Card>

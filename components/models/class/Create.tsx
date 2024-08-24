@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const CreateClass = ({
   model,
@@ -22,6 +22,7 @@ export const CreateClass = ({
   relation,
   page,
 }: any) => {
+  useAdminCheck();
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
@@ -29,7 +30,7 @@ export const CreateClass = ({
   const [loading, setLoading] = useState(true);
 
   const [isRelational, setIsRelational] = useState(false);
-  
+
 
   const createRecord = () => {
     const requiredFields = model.fields?.filter((field: any) => field.required);
@@ -42,8 +43,8 @@ export const CreateClass = ({
       if (isEmptyRecord) {
         alert(`Please fill all required fields. 
             ${JSON.stringify(
-              requiredFields?.map((field: any) => field.name)
-            )}`);
+          requiredFields?.map((field: any) => field.name)
+        )}`);
         return;
       }
     }

@@ -14,18 +14,8 @@ import {
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const CreateTasks = ({
   model,
@@ -34,6 +24,7 @@ export const CreateTasks = ({
   page,
   lecture_id,
 }: any) => {
+  useAdminCheck();
   const [lectures, setLectures] = useState([]);
   const [data, setData] = useState({ ...relation });
   const [creating, setCreating] = useState(false);
@@ -191,40 +182,30 @@ export const CreateTasks = ({
         action={"create"}
       />
       <div className="mt-10">
-        <Popover>
-          <PopoverTrigger className="w-full">
-            <Command className="w-full">
-              <CommandInput
-                placeholder="Type a class or search..."
-                className="rounded-t-lg"
-              />
-              <PopoverContent className="max-h-60 w-full overflow-auto">
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandList>
-                  {lectures.map((option: any) => (
-                    <CommandItem
-                      key={option.id}
-                      value={option.id}
-                      defaultValue={lecture_id}
-                      onSelect={() => {
-                        setData({
-                          ...data,
-                          lecture: {
-                            connect: {
-                              id: option.id,
-                            },
-                          },
-                        });
-                      }}
-                    >
-                      {option.name}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </PopoverContent>
-            </Command>
-          </PopoverTrigger>
-        </Popover>
+      <Select
+            defaultValue={lecture_id}
+            onValueChange={(e) =>
+              setData({
+                ...data,
+                lecture: {
+                  connect: {
+                    id: e,
+                  },
+                },
+              })
+            }
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Select Class" />
+            </SelectTrigger>
+            <SelectContent>
+              {lectures.map((option: any) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
       </div>
       <Button
         className="mt-4 w-full sm:w-auto"
