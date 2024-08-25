@@ -47,8 +47,6 @@ export const LectureCompleteCreate = ({
         setLoading(false);
       });
   }, []);
-  
-console.log({lectures});
 
 
   useEffect(() => {

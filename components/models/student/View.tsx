@@ -19,8 +19,6 @@ import Image from "next/image";
 import { useReactToPrint } from "react-to-print";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useReadLocalStorage } from "usehooks-ts";
-import { ListClasses } from "./ListClasses";
-import { ListStudentsFee } from "../class/classStudents/fee/List";
 import { ViewStudentInClass } from "../class/classStudents/View";
 
 
@@ -33,7 +31,11 @@ export const ViewStudent = ({ modelSlug, id }: { modelSlug: string, id: string }
   const teacherId: any = useReadLocalStorage("teacherId");
   const studentId: any = useReadLocalStorage("studentId");
   const printRef = useRef<HTMLDivElement | null>(null);
-
+useEffect(() => {
+  if(!teacherId && !studentId){
+    location.href = "/";
+  }
+}, []);
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,

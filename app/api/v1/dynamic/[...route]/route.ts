@@ -132,7 +132,6 @@ export async function POST(req: NextRequest, params: any) {
     return NextResponse.json({ error: "Page not found" }, { status: 404 });
   }
 
-  console.log(JSON.stringify(data_0));
   
 
   let data_2: any = {};
@@ -147,8 +146,6 @@ export async function POST(req: NextRequest, params: any) {
       }
       return { slug: field.slug, value: data_0[field.slug] };
     });
-
-  console.log(JSON.stringify(createFields));
 
   if (createFields.filter((v: any) => v.value === undefined)?.length !== 0) {
     return NextResponse.json(
