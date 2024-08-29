@@ -2,7 +2,7 @@
 import { prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, Check, CheckCircle, Loader } from "lucide-react";
+import { ArrowLeft,CheckCircle, Loader } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -48,6 +48,8 @@ export const LectureCompleteCreate = ({
       });
   }, []);
 
+  console.log({data});
+  
 
   useEffect(() => {
     if (student_id) {

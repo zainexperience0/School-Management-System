@@ -135,7 +135,7 @@ model LectureCompleted {
   classToStudent   ClassToStudent @relation(fields: [classToStudentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   classToStudentId String         @db.ObjectId
   lecture          Lecture        @relation(fields: [lectureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  lectureId        String         @db.ObjectId @unique
+  lectureId        String         @db.ObjectId
 
   taskCompleted TaskCompleted[]
   createdAt     DateTime        @default(now())

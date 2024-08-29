@@ -48,8 +48,6 @@ export const ViewStudentInClass = ({ modelSlug, id }: any) => {
       });
   };
 
-  console.log(data);
-
   if (failed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
@@ -90,19 +88,21 @@ export const ViewStudentInClass = ({ modelSlug, id }: any) => {
 
   return (
     <div className="max-w-5xl mx-auto my-8 px-4 rounded-md">
-      <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/${prePath}/${modelSlug}`}>
-              {model.name}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{data.student.name}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+     {!student_id && (
+       <Breadcrumb className="mb-4">
+       <BreadcrumbList>
+         <BreadcrumbItem>
+           <BreadcrumbLink href={`/${prePath}/${modelSlug}`}>
+             {model.name}
+           </BreadcrumbLink>
+         </BreadcrumbItem>
+         <BreadcrumbSeparator />
+         <BreadcrumbItem>
+           <BreadcrumbPage>{data.student.name}</BreadcrumbPage>
+         </BreadcrumbItem>
+       </BreadcrumbList>
+     </Breadcrumb>
+     )}
       <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 p-4 border-b">
         <div className="flex items-center space-x-3">
           <Image

@@ -1,8 +1,8 @@
 "use client";
 import { prePath } from "@/lib/schemas";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { ArrowLeft, Check, CheckCircle, Loader } from "lucide-react";
+import { ArrowLeft, CheckCircle, Loader } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,132 +17,115 @@ import { InputWrapper } from "@/components/custom/inputWrapper";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
 
-export const CreateTasks = ({
-  model,
-  callbackFn,
-  relation,
-  page,
-  lecture_id,
-}: any) => {
+export const CreateTasks = ({ model, callbackFn, relation, page, lecture_id }: any) => {
   useAdminCheck();
-  const [lectures, setLectures] = useState([]);
-  const [data, setData] = useState({ ...relation });
-  const [creating, setCreating] = useState(false);
-  const [createSuccess, setCreateSuccess] = useState(false);
-  const [createFail, setCreateFail] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState<any>({
+    lectures: [],
+    classes: [],
+    classId: null,
+    data: { ...relation },
+    loading: true,
+    creating: false,
+    status: null, // 'success', 'fail'
+    isRelational: false,
+  });
 
-  const [isRelational, setIsRelational] = useState(false);
+  // Combine API calls for fetching classes and lectures
+  const fetchClassesAndLectures = useCallback(async () => {
+    setState((prev: any) => ({ ...prev }));
+    try {
+      const [classRes, lectureRes] = await Promise.all([
+        axios.get(`/api/v1/dynamic/class`),
+        state.classId && axios.post(`/api/lectures`, { classId: state.classId }),
+      ]);
+
+      setState((prev: any) => ({
+        ...prev,
+        classes: classRes.data || [],
+        lectures: lectureRes?.data || [],
+        loading: false,
+      }));
+    } catch (error) {
+      console.error(error);
+      setState((prev: any) => ({ ...prev, loading: false }));
+    }
+  }, [state.classId]);
 
   useEffect(() => {
-    axios
-      .get("/api/v1/dynamic/lecture")
-      .then((res: any) => {
-        setLectures(res.data);
-        setLoading(false);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, []);
+    fetchClassesAndLectures();
+  }, [fetchClassesAndLectures, page]);
 
   useEffect(() => {
     if (lecture_id) {
-      setData((prevData: any) => ({
-        ...prevData,
-        lecture: {
-          connect: {
-            id: lecture_id,
-          },
+      setState((prev: any) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          lecture: { connect: { id: lecture_id } },
         },
       }));
     }
-  }, [lecture_id]) 
-  const createRecord = () => {
-    const requiredFields = model.fields?.filter((field: any) => field.required);
+  }, [lecture_id]);
 
-    if (requiredFields?.length > 0) {
-      const isEmptyRecord = requiredFields.find(
-        (field: any) =>
-          data[field.slug] === undefined || data[field.slug] === ""
-      );
-      if (isEmptyRecord) {
-        alert(`Please fill all required fields. 
-            ${JSON.stringify(
-              requiredFields?.map((field: any) => field.name)
-            )}`);
-        return;
-      }
+  const createRecord = async () => {
+    const requiredFields = model.fields?.filter((field: any) => field.required);
+    const isEmptyRecord = requiredFields?.some(
+      (field: any) => !state.data[field.slug]
+    );
+
+    if (isEmptyRecord) {
+      alert(`Please fill all required fields: ${JSON.stringify(requiredFields.map((field: any) => field.name))}`);
+      return;
     }
-    setCreating(true);
-    axios
-      .post(`/api/v1/dynamic/${model.model}`, data)
-      .then((resp: any) => {
-        // console.log(resp);
-        setCreating(false);
-        setCreateSuccess(true);
-        setTimeout(() => {
-          resetFields();
-          if (!callbackFn) {
-            window.history.back();
-          } else {
-            callbackFn();
-          }
-        }, 2000);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        setCreating(false);
-        setCreateFail(true);
-      });
+
+    setState((prev: any) => ({ ...prev, creating: true }));
+    try {
+      await axios.post(`/api/v1/dynamic/${model.model}`, state.data);
+      setState((prev: any) => ({ ...prev, creating: false, status: 'success' }));
+      setTimeout(() => {
+        resetFields();
+        callbackFn ? callbackFn() : window.history.back();
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setState((prev: any) => ({ ...prev, creating: false, status: 'fail' }));
+    }
   };
 
   const resetFields = () => {
-    setCreating(false);
-    setCreateSuccess(false);
-    setCreateFail(false);
-    setData({ ...relation });
+    setState((prev: any) => ({
+      ...prev,
+      creating: false,
+      status: null,
+      data: { ...relation },
+    }));
   };
 
   useEffect(() => {
     if (!relation) {
-      setLoading(false);
+      setState((prev: any) => ({ ...prev, loading: false }));
       return;
     }
-    const schemaRelationalFields = model.fields
-      ?.filter((field: any) => field?.type === "relation")
-      ?.map((field: any) => field?.slug);
-    const propRelationalFields = Object.keys(relation);
-    const isRelationalField = schemaRelationalFields?.some(
-      (field: any) => !propRelationalFields?.includes(field)
-    );
-    // console.log({ isRelationalField });
-    setIsRelational(!!isRelationalField);
 
-    setLoading(false);
-  }, []);
+    const schemaRelationalFields = model.fields?.filter((field: any) => field.type === "relation").map((field: any) => field.slug);
+    const propRelationalFields = Object.keys(relation);
+    const isRelationalField = schemaRelationalFields?.some((field: any) => !propRelationalFields.includes(field));
+    setState((prev: any) => ({ ...prev, isRelational: !!isRelationalField, loading: false }));
+  }, [model.fields, relation]);
 
   if (!model) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
-        <p className="text-destructive text-2xl font-semibold">
-          Page not found!
-        </p>
+        <p className="text-destructive text-2xl font-semibold">Page not found!</p>
       </div>
     );
   }
 
-  if (isRelational) {
+  if (state.isRelational) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center space-y-4">
-        <p className="text-destructive text-2xl font-semibold">
-          Relational records cannot be created manually!
-        </p>
-        <Link
-          href={`/${prePath}/${model.model}`}
-          className={buttonVariants({ variant: "outline" })}
-        >
+        <p className="text-destructive text-2xl font-semibold">Relational records cannot be created manually!</p>
+        <Link href={`/${prePath}/${model.model}`} className={buttonVariants({ variant: "outline" })}>
           <ArrowLeft className="mr-2 w-4 h-4" />
           Go back
         </Link>
@@ -150,7 +133,7 @@ export const CreateTasks = ({
     );
   }
 
-  if (loading) {
+  if (state.loading) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">
         <Loader className="mx-auto animate-spin" />
@@ -175,51 +158,53 @@ export const CreateTasks = ({
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <InputWrapper
-        model={model}
-        data={data}
-        setData={setData}
-        action={"create"}
-      />
-      <div className="mt-10">
-      <Select
-            defaultValue={lecture_id}
-            onValueChange={(e) =>
-              setData({
-                ...data,
-                lecture: {
-                  connect: {
-                    id: e,
-                  },
-                },
-              })
-            }
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Select Class" />
-            </SelectTrigger>
-            <SelectContent>
-              {lectures.map((option: any) => (
-                <SelectItem key={option.id} value={option.id}>
-                  {option.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <InputWrapper model={model} data={state.data} setData={(data: any) => setState((prev: any) => ({ ...prev, data }))} action="create" />
+      <div className="mt-10 flex justify-between items-center">
+        <h1>Select Class</h1>
+        <Select onValueChange={(value) => setState((prev: any) => ({ ...prev, classId: value }))}>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select Class" />
+          </SelectTrigger>
+          <SelectContent>
+            {state.classes.map((option: any) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="mt-10 flex justify-between items-center">
+        <h1>Select lectures</h1>
+        <Select
+          onValueChange={() => setState((prev: any) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              lecture: { connect: { id: lecture_id } },
+            },
+          }))}
+          defaultValue={lecture_id || ""}>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select Lectures" />
+          </SelectTrigger>
+          <SelectContent>
+            {state.lectures.map((option: any) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <Button
         className="mt-4 w-full sm:w-auto"
-        onClick={() => {
-          createRecord();
-        }}
-        disabled={creating || createSuccess || createFail}
+        onClick={createRecord}
+        disabled={state.creating || state.status}
       >
-        {creating && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-        {creating && "Creating..."}
-        {!creating && !createSuccess && !createFail && "Submit"}
-        {createSuccess && <CheckCircle className="h-4 w-4 mr-2" />}
-        {createSuccess && `${model.name} created!`}
-        {createFail && "Failed to create!"}
+        {state.creating && <Loader className="h-4 w-4 mr-2 animate-spin" />}
+        {state.creating ? "Creating..." : state.status === 'success' ? `${model.name} created!` : "Submit"}
+        {state.status === 'fail' && "Failed to create!"}
       </Button>
     </div>
   );

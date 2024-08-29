@@ -20,6 +20,19 @@ export const calculateRemainingDays = (createdAt: any, durationInMonths: any) =>
   return remainingDays > 0 ? remainingDays : 0; // Ensure that we don't return negative values
 };
 
+export const calculateRemainingHours = (createdAt: any, durationInHours: any) => {
+  // Convert createdAt to a Date object
+  const startDate = new Date(createdAt);
+  
+  // Calculate the end date by adding the duration in hours
+  const endDate = new Date(startDate.getTime() + durationInHours * 60 * 60 * 1000);
+  
+  // Calculate the difference in hours between the end date and the current date
+  const remainingHours = Math.floor((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60));
+  
+  return remainingHours > 0 ? remainingHours : 0; // Ensure that we don't return negative values
+};
+
 
 export function isoToDate(isoString: string): string {
   const date = new Date(isoString);

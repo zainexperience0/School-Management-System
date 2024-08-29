@@ -72,10 +72,6 @@ useEffect(() => {
       });
   }, [id]);
 
-  console.log({ classes });
-  
-  
-
   if (failed) {
     return (
       <div className="mt-10 max-w-5xl mx-auto text-center">

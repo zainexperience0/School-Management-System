@@ -3,7 +3,7 @@ import { allModels, prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeft, Info, Loader, Pencil, Trash } from "lucide-react";
-import { cn, isoToDate, timeAgo } from "@/lib/utils";
+import { calculateRemainingHours, cn, isoToDate, timeAgo } from "@/lib/utils";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,9 +16,10 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ListCompletedTasks } from "./taskCompleted/List";
+import { useReadLocalStorage } from "usehooks-ts";
 
 export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
-
+  const studentid = useReadLocalStorage("studentId");
   const [data, setData] = useState<any>({});
   const [model, setModel] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -40,7 +41,6 @@ export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
         setFailed(true);
       });
   };
-
 
   if (failed) {
     return (
@@ -99,7 +99,8 @@ export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
         <p className="text-lg sm:text-xl text-muted-foreground">
           {isoToDate(data?.createdAt)}
         </p>
-        <div className="flex flex-row space-x-2 mt-2 sm:mt-0">
+        {!studentid && (
+          <div className="flex flex-row space-x-2 mt-2 sm:mt-0">
           <Link
             href={`/${prePath}/${modelSlug}/edit/${data.id}`}
             className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
@@ -115,12 +116,14 @@ export const ViewLectureCompleted = ({ modelSlug, id }: any) => {
             Delete
           </Link>
         </div>
+        )}
       </div>
       <p className="text-4xl sm:text-5xl font-semibold mb-2">{data.name}</p>
       <Separator className="my-4" />
       <p className="text-lg text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
+      <p>{calculateRemainingHours(data?.createdAt, data?.duration)} hours left</p>
       <div>
         <ListCompletedTasks modelSlug={"taskCompleted"} lecture_id={id} />
       </div>

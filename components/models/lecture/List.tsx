@@ -30,6 +30,7 @@ export const ListLecturesData = ({ modelSlug, id }: any) => {
     modelSlug,
     searchQuery,
   });
+  
 
   const [loading, setLoading] = useState(true);
   const [model, setModel] = useState<any>({});

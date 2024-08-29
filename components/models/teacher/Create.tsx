@@ -15,7 +15,6 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InputWrapper } from "@/components/custom/inputWrapper";
 import { generateFromEmail } from "unique-username-generator";
-import Image from "next/image";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
 
 export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
@@ -149,13 +148,6 @@ export const RegisterAdmin = ({ model, callbackFn, relation, page }: any) => {
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <Image
-        src={data?.image}
-        alt={model.name}
-        width={200}
-        height={200}
-        className="mx-auto"
-      />
       <InputWrapper
         model={model}
         data={data}

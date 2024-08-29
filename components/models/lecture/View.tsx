@@ -3,7 +3,7 @@ import { allModels, prePath } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeft, Info, Loader, Pencil, Trash } from "lucide-react";
-import { cn, isoToDate, timeAgo } from "@/lib/utils";
+import { calculateRemainingHours, cn, isoToDate, timeAgo } from "@/lib/utils";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListTasks } from "../tasks/List";
 import { useAdminCheck } from "@/lib/hooks/admin-check";
+import { MarkdownViewer } from "@/components/customView/markdown";
 
 export const ViewLecture = ({ modelSlug, id }: any) => {
   useAdminCheck();
@@ -42,6 +43,10 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
         setFailed(true);
       });
   };
+
+  console.log({ data });
+
+
 
   if (failed) {
     return (
@@ -122,7 +127,9 @@ export const ViewLecture = ({ modelSlug, id }: any) => {
       <p className="text-lg text-muted-foreground mb-10">
         Updated {timeAgo(data?.updatedAt)}
       </p>
-      <Tabs defaultValue="tasks" className="w-full">
+      <p>{calculateRemainingHours(data?.createdAt, data?.duration)} hours left</p>
+      <MarkdownViewer content={data?.content} customClassName="border p-2" />
+      <Tabs defaultValue="tasks" className="w-full mt-10">
         <TabsList className="w-full border-b border-muted">
           <TabsTrigger value="tasks" className="flex-1 text-center py-2">
             Tasks

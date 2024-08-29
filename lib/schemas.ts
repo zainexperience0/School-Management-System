@@ -153,7 +153,7 @@ export const allModels = [
           "update",
           "delete",
         ],
-        frontend: ["list", "view", "update", "delete"],
+        frontend: ["list", "view", "update", "delete", "create"],
         valueGetter: () => {
           return "https://github.com/shadcn.png";
         },
@@ -512,7 +512,7 @@ export const allModels = [
         },
       },
       {
-        name: "Duration",
+        name: "Duration In Months",
         slug: "duration",
         type: "numberInput",
         defaultValue: 0,
@@ -618,7 +618,7 @@ export const allModels = [
         },
       },
       {
-        name: "Duration",
+        name: "Duration in hours",
         slug: "duration",
         type: "numberInput",
         defaultValue: 0,
@@ -1007,7 +1007,7 @@ export const allModels = [
         },
       },
       {
-        name: "Duration",
+        name: "Duration In hours",
         slug: "duration",
         type: "numberInput",
         defaultValue: 24,
